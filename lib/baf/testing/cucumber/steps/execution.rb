@@ -3,6 +3,7 @@ def program_run
   run_simple cmd.join(' '), fail_on_error: false
 end
 
+
 When /^I run the program$/ do
   program_run
 end
