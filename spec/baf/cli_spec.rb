@@ -1,9 +1,12 @@
 module Baf
   RSpec.describe CLI do
+    include ExitHelpers
+
+    let(:stderr)  { StringIO.new }
     subject(:cli) { described_class.new }
 
     describe '.run' do
-      subject(:run) { described_class.run [] }
+      subject(:run) { described_class.run [], stderr: stderr }
 
       it 'builds a new CLI' do
         expect(described_class).to receive(:new).and_call_original
@@ -27,6 +30,11 @@ module Baf
           expect { run }.to raise_error(SystemExit) do |e|
             expect(e.status).to eq 70
           end
+        end
+
+        it 'prints the error on error output' do
+          trap_exit { run }
+          expect(stderr.string).to match /\ARuntimeError: some error\n/
         end
       end
     end
