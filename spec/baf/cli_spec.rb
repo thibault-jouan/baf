@@ -2,11 +2,12 @@ module Baf
   RSpec.describe CLI do
     include ExitHelpers
 
-    let(:stderr)  { StringIO.new }
-    subject(:cli) { described_class.new }
+    let(:stderr)    { StringIO.new }
+    let(:arguments) { %w[foo bar] }
+    subject(:cli)   { described_class.new arguments }
 
     describe '.run' do
-      subject(:run) { described_class.run [], stderr: stderr }
+      subject(:run) { described_class.run arguments, stderr: stderr }
 
       it 'builds a new CLI' do
         expect(described_class).to receive(:new).and_call_original
@@ -36,6 +37,12 @@ module Baf
           trap_exit { run }
           expect(stderr.string).to match /\ARuntimeError: some error\n/
         end
+      end
+    end
+
+    describe '#arguments' do
+      it 'returns given arguments' do
+        expect(cli.arguments).to eq arguments
       end
     end
   end
