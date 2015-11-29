@@ -1,5 +1,7 @@
 require 'baf'
 
+Dir['spec/support/**/*.rb'].map { |e| require e.gsub 'spec/', '' }
+
 RSpec.configure do |c|
   c.disable_monkey_patching!
 
