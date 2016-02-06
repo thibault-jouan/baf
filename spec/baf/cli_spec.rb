@@ -11,7 +11,7 @@ module Baf
 
       it 'builds a new CLI' do
         expect(described_class).to receive(:new).and_call_original
-        run
+        trap_exit! { run }
       end
 
       it 'runs the CLI' do
