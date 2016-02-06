@@ -6,7 +6,7 @@ module Baf
     let(:arguments) { %w[foo bar] }
     subject(:cli)   { described_class.new arguments }
 
-    describe '.run' do
+    describe '.run!' do
       subject(:run) { described_class.run arguments, stderr: stderr }
 
       it 'builds a new CLI' do
@@ -35,7 +35,7 @@ module Baf
 
         it 'prints the error on error output' do
           trap_exit { run }
-          expect(stderr.string).to match /\ARuntimeError: some error\n/
+          expect(stderr.string).to start_with 'RuntimeError: some error'
         end
       end
     end
