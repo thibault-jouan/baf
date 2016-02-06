@@ -2,9 +2,8 @@ sudo: false
 language: ruby
 cache: bundler
 rvm:
-  - 2.3
-  - ruby-head
   - 2.2
+  - ruby-head
   - 2.1
 matrix:
   fast_finish: true
