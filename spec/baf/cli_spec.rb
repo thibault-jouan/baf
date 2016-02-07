@@ -2,9 +2,24 @@ module Baf
   RSpec.describe CLI do
     include ExitHelpers
 
-    let(:stderr)    { StringIO.new }
-    let(:arguments) { %w[foo bar] }
-    subject(:cli)   { described_class.new arguments }
+    let(:stderr)          { StringIO.new }
+    let(:env)             { Env.new }
+    let(:options_parser)  { OptionParser.new}
+    let(:arguments)       { %w[foo bar] }
+    subject(:cli)         { described_class.new env, options_parser, arguments }
+
+    describe '.option' do
+      it 'register given option with an option registrant' do
+        registrant = double 'registrant'
+        expect(registrant).to receive(:register).with(
+          an_instance_of(Env),
+          an_instance_of(OptionParser),
+          :short,
+          :long
+        )
+        described_class.option :short, :long, registrant: registrant
+      end
+    end
 
     describe '.run!' do
       subject(:run) { described_class.run arguments, stderr: stderr }
@@ -43,6 +58,12 @@ module Baf
     describe '#arguments' do
       it 'returns given arguments' do
         expect(cli.arguments).to eq arguments
+      end
+    end
+
+    describe '#env' do
+      it 'returns given env' do
+        expect(cli.env).to eq env
       end
     end
   end

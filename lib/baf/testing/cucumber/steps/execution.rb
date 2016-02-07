@@ -1,5 +1,6 @@
-def program_run check: false, args: nil
+def program_run check: false, opts: nil, args: nil
   cmd = %w[ruby baf]
+  cmd << opts if opts
   cmd << args.split(' ') if args
   run_simple cmd.join(' '), fail_on_error: false
   return unless check
@@ -22,6 +23,10 @@ end
 
 When /^I( successfully)? run the program with arguments (.+)$/ do |check, args|
   program_run check: !!check, args: args
+end
+
+When /^I( successfully)? run the program with options? (-.+)$/ do |check, opts|
+  program_run check: !!check, opts: opts
 end
 
 
