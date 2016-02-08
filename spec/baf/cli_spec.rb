@@ -43,6 +43,21 @@ module Baf
         run
       end
 
+      context 'when given invalid arguments' do
+        let(:arguments) { %w[--unknown-option] }
+
+        it 'prints the usage on standard error stream' do
+          trap_exit { run }
+          expect(stderr.string).to start_with 'Usage: '
+        end
+
+        it 'exits with a return status of 64' do
+          expect { run }.to raise_error(SystemExit) do |e|
+            expect(e.status).to eq 64
+          end
+        end
+      end
+
       context 'when the CLI raises an error' do
         before do
           allow(cli).to receive(:run!) { fail 'some error' }
@@ -78,6 +93,15 @@ module Baf
       it 'asks the option parser to parse CLI arguments' do
         expect(option_parser).to receive(:parse!).with arguments
         cli.parse_arguments!
+      end
+
+      context 'when given an invalid option' do
+        let(:arguments) { %w[--unknown-option] }
+
+        it 'raises a CLI::ArgumentError' do
+          expect { cli.parse_arguments! }
+            .to raise_error CLI::ArgumentError
+        end
       end
     end
   end

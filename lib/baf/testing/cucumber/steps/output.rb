@@ -9,6 +9,10 @@ def build_regexp pattern, options
 end
 
 
+Then /^the output must contain exactly:$/ do |content|
+  expect(last_command_started.output).to eq unescape_text content + $/
+end
+
 Then /^the output must contain exactly "([^"]+)"$/ do |content|
   expect(last_command_started.output).to eq unescape_text content
 end

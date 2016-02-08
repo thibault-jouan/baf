@@ -1,5 +1,8 @@
 module Baf
   class CLI
+    ArgumentError = Class.new(ArgumentError)
+
+    EX_USAGE    = 64
     EX_SOFTWARE = 70
 
     class << self
@@ -11,6 +14,9 @@ module Baf
         cli = new env, option_parser, arguments
         cli.parse_arguments!
         cli.run!
+      rescue ArgumentError => e
+        stderr.puts e
+        exit EX_USAGE
       rescue StandardError => e
         stderr.puts "#{e.class.name}: #{e.message}"
         stderr.puts e.backtrace.map { |l| '  %s' % l }
@@ -38,6 +44,8 @@ module Baf
 
     def parse_arguments!
       option_parser.parse! arguments
+    rescue OptionParser::InvalidOption
+      raise ArgumentError, option_parser
     end
 
     def run!
