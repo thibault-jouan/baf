@@ -7,7 +7,7 @@ module Baf
 
     class << self
       def option short, long, registrant: OptionRegistrant
-        registrant.register(env, option_parser, short, long)
+        registrant.register env, option_parser, short, long
       end
 
       def run arguments, stderr: $stderr
