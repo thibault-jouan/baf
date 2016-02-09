@@ -6,8 +6,12 @@ module Baf
     EX_SOFTWARE = 70
 
     class << self
-      def option short, long, registrant: OptionRegistrant
-        registrant.register env, option_parser, short, long
+      def flag *args, registrant: OptionRegistrant
+        registrant.register_flag env, option_parser, *args
+      end
+
+      def option *args, registrant: OptionRegistrant
+        registrant.register_option env, option_parser, Option.new(*args)
       end
 
       def run arguments, stderr: $stderr
@@ -24,6 +28,8 @@ module Baf
       end
 
     private
+
+      Option = Struct.new('Option', :short, :long, :arg, :desc)
 
       def env
         @env ||= Env.new

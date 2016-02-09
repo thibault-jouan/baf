@@ -8,16 +8,32 @@ module Baf
     let(:arguments)     { %w[foo bar] }
     subject(:cli)       { described_class.new env, option_parser, arguments }
 
-    describe '.option' do
-      it 'register given option with an option registrant' do
+    describe '.flag' do
+      it 'registers given option flag with an option registrant' do
         registrant = double 'registrant'
-        expect(registrant).to receive(:register).with(
+        expect(registrant).to receive(:register_flag).with(
           an_instance_of(Env),
           an_instance_of(OptionParser),
           :short,
           :long
         )
-        described_class.option :short, :long, registrant: registrant
+        described_class.flag :short, :long, registrant: registrant
+      end
+    end
+
+    describe '.option' do
+      it 'registers given option with an option registrant' do
+        registrant = double 'registrant'
+        expect(registrant).to receive :register_option do |env, parser, opt|
+          expect(env).to be_an Env
+          expect(parser).to be_an OptionParser
+          expect(opt.short).to eq :f
+          expect(opt.long).to eq :foo
+          expect(opt.arg).to eq 'VALUE'
+          expect(opt.desc).to eq 'set foo to VALUE'
+        end
+        described_class
+          .option :f, :foo, 'VALUE', 'set foo to VALUE', registrant: registrant
       end
     end
 
