@@ -18,7 +18,7 @@ module Baf
         stderr.puts e
         exit EX_USAGE
       rescue StandardError => e
-        stderr.puts "#{e.class.name}: #{e.message}"
+        stderr.puts "#{e.class.name}: #{e}"
         stderr.puts e.backtrace.map { |l| '  %s' % l }
         exit EX_SOFTWARE
       end
