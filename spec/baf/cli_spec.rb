@@ -4,7 +4,7 @@ module Baf
 
     let(:stderr)        { StringIO.new }
     let(:env)           { Env.new }
-    let(:option_parser) { OptionParser.new}
+    let(:option_parser) { OptionParser.new }
     let(:arguments)     { %w[foo bar] }
     subject(:cli)       { described_class.new env, option_parser, arguments }
 
