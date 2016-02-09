@@ -28,16 +28,16 @@ module Baf
       end
     end
 
-    attr_reader :arguments, :env, :options_parser
+    attr_reader :arguments, :env, :option_parser
 
-    def initialize env, options_parser, arguments
+    def initialize env, option_parser, arguments
       @env            = env
-      @options_parser = options_parser
+      @option_parser  = option_parser
       @arguments      = arguments
     end
 
     def parse_arguments!
-      options_parser.parse! arguments
+      option_parser.parse! arguments
     end
 
     def run!
