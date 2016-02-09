@@ -1,6 +1,6 @@
 Feature: Program usage
 
-  Scenario: prints the usage when unknown option switch is given
+  Scenario: prints the usage when unknown option is given
     Given the following baf program:
       """
       Baf::CLI.run(ARGV)
@@ -12,7 +12,7 @@ Feature: Program usage
       Usage: baf [options]
       """
 
-  Scenario: prints the usage when -h option switch is given
+  Scenario: prints the usage when -h option is given
     Given the following baf program:
       """
       Baf::CLI.run(ARGV)
