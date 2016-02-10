@@ -37,7 +37,7 @@ module Baf
       end
     end
 
-    describe '.run!' do
+    describe '.run' do
       subject(:run) { described_class.run arguments, stderr: stderr }
 
       it 'builds a new CLI' do
@@ -55,7 +55,7 @@ module Baf
       it 'runs the CLI' do
         cli
         allow(described_class).to receive(:new) { cli }
-        expect(cli).to receive :run!
+        expect(cli).to receive :run
         run
       end
 
@@ -76,7 +76,7 @@ module Baf
 
       context 'when the CLI raises an error' do
         before do
-          allow(cli).to receive(:run!) { fail 'some error' }
+          allow(cli).to receive(:run) { fail 'some error' }
           allow(described_class).to receive(:new) { cli }
         end
 

@@ -4,7 +4,7 @@ Feature: Error reporting
     Given the following baf program:
       """
       Class.new(Baf::CLI) do
-        def run!
+        def run
           fail 'some error'
         end
       end.run(ARGV)

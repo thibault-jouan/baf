@@ -4,7 +4,7 @@ Feature: Program arguments
     Given the following baf program:
       """
       Class.new(Baf::CLI) do
-        def run!
+        def run
           puts arguments
         end
       end.run(ARGV)

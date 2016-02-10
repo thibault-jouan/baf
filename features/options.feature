@@ -7,7 +7,7 @@ Feature: Options declaration
         flag :f, :foo
         flag :b, :bar
 
-        def run!
+        def run
           puts env.foo?
           puts env.bar?
         end
@@ -22,7 +22,7 @@ Feature: Options declaration
       Class.new(Baf::CLI) do
         option :f, :foo, 'VALUE', 'set foo to VALUE'
 
-        def run!
+        def run
           puts env.foo
         end
       end.run(ARGV)

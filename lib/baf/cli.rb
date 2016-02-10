@@ -17,7 +17,7 @@ module Baf
       def run arguments, stderr: $stderr
         cli = new env, option_parser, arguments
         cli.parse_arguments!
-        cli.run!
+        cli.run
       rescue ArgumentError => e
         stderr.puts e
         exit EX_USAGE
@@ -54,7 +54,7 @@ module Baf
       raise ArgumentError, option_parser
     end
 
-    def run!
+    def run
     end
   end
 end
