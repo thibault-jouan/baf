@@ -3,8 +3,11 @@ def program_run check: false, opts: nil, args: nil
   cmd << opts if opts
   cmd << args.split(' ') if args
   run_simple cmd.join(' '), fail_on_error: false
-  return unless check
-  expect(last_command_started).to have_exit_status 0
+  program_run_check if check
+end
+
+def program_run_check status: 0
+  expect(last_command_started).to have_exit_status status
 rescue RSpec::Expectations::ExpectationNotMetError => e
   if ENV.key? 'BAF_TEST_DEBUG'
     fail RSpec::Expectations::ExpectationNotMetError, <<-eoh
@@ -31,5 +34,5 @@ end
 
 
 Then /^the exit status must be (\d+)$/ do |exit_status|
-  expect(last_command_started).to have_exit_status exit_status.to_i
+  program_run_check status: exit_status.to_i
 end
