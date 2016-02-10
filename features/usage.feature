@@ -10,6 +10,9 @@ Feature: Program usage
     And the output must contain exactly:
       """
       Usage: baf [options]
+
+      options:
+          -h, --help                       print this message
       """
 
   Scenario: prints the usage when -h option is given
@@ -22,4 +25,7 @@ Feature: Program usage
     And the output must contain exactly:
       """
       Usage: baf [options]
+
+      options:
+          -h, --help                       print this message
       """
