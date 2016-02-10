@@ -14,8 +14,8 @@ module Baf
         registrant.register_option env, option_parser, Option.new(*args)
       end
 
-      def run arguments, stderr: $stderr
-        cli = new env, option_parser, arguments
+      def run arguments, stdout: $stdout, stderr: $stderr
+        cli = new env(stdout), option_parser, arguments
         cli.parse_arguments!
         cli.run
       rescue ArgumentError => e
@@ -31,8 +31,8 @@ module Baf
 
       Option = Struct.new('Option', :short, :long, :arg, :desc)
 
-      def env
-        @env ||= Env.new
+      def env(output = nil)
+        @env ||= Env.new(output)
       end
 
       def option_parser
@@ -46,6 +46,7 @@ module Baf
       @env            = env
       @option_parser  = option_parser
       @arguments      = arguments
+      setup_default_options option_parser
     end
 
     def parse_arguments!
@@ -55,6 +56,16 @@ module Baf
     end
 
     def run
+    end
+
+  protected
+
+    def setup_default_options option_parser
+      option_parser.separator ''
+      option_parser.separator 'options:'
+      option_parser.on_tail '-h', '--help', 'print this message' do
+        env.print option_parser
+      end
     end
   end
 end

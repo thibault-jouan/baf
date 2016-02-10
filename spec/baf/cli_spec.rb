@@ -2,8 +2,9 @@ module Baf
   RSpec.describe CLI do
     include ExitHelpers
 
+    let(:stdout)        { StringIO.new }
     let(:stderr)        { StringIO.new }
-    let(:env)           { Env.new }
+    let(:env)           { Env.new(stdout) }
     let(:option_parser) { OptionParser.new }
     let(:arguments)     { %w[foo bar] }
     subject(:cli)       { described_class.new env, option_parser, arguments }
@@ -90,6 +91,18 @@ module Baf
           trap_exit { run }
           expect(stderr.string).to start_with 'RuntimeError: some error'
         end
+      end
+    end
+
+    describe '#initialize' do
+      it 'adds a header for options on option parser' do
+        cli
+        expect(option_parser.to_s).to match /\n^options:\n\s+-/
+      end
+
+      it 'adds help option on option parser tail' do
+        cli
+        expect(option_parser.to_s).to match /^\s+-h,\s+--help\s+print this message\n/
       end
     end
 

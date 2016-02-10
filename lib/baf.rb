@@ -1,3 +1,4 @@
+require 'forwardable'
 require 'optparse'
 
 require 'baf/cli'

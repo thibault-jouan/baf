@@ -1,6 +1,7 @@
 module Baf
   RSpec.describe OptionRegistrant do
-    let(:env)     { Env.new }
+    let(:output)  { StringIO.new }
+    let(:env)     { Env.new(output) }
     let(:parser)  { OptionParser.new }
 
     describe '.register_flag' do
