@@ -27,7 +27,7 @@ module Baf
         exit EX_SOFTWARE
       end
 
-    private
+    protected
 
       Option = Struct.new('Option', :short, :long, :arg, :desc)
 
