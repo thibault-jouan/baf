@@ -31,7 +31,7 @@ module Baf
 
       Option = Struct.new('Option', :short, :long, :arg, :desc)
 
-      def env(output = nil)
+      def env output = nil
         @env ||= Env.new(output)
       end
 
