@@ -1,5 +1,5 @@
 def program_run check: false, opts: nil, args: nil
-  cmd = %w[ruby baf]
+  cmd = [*@_baf_program ||= %w[ruby baf]]
   cmd << opts if opts
   cmd << args.split(' ') if args
   run_simple cmd.join(' '), fail_on_error: false
