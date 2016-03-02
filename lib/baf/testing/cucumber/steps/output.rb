@@ -9,7 +9,7 @@ def build_regexp pattern, options
 end
 
 def expect_output content
-  expect(last_command_started.output).to eq unescape_text content + $/
+  expect(last_command_started.output).to eq unescape_text content
 end
 
 
