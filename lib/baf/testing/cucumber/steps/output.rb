@@ -8,13 +8,17 @@ def build_regexp pattern, options
   end)
 end
 
-
-Then /^the output must contain exactly:$/ do |content|
+def expect_output content
   expect(last_command_started.output).to eq unescape_text content + $/
 end
 
+
+Then /^the output must contain exactly:$/ do |content|
+  expect_output content + $/
+end
+
 Then /^the output must contain exactly "([^"]+)"$/ do |content|
-  expect(last_command_started.output).to eq unescape_text content
+  expect_output content
 end
 
 Then /^the output must match \/([^\/]+)\/([a-z]*)$/ do |pattern, options|
