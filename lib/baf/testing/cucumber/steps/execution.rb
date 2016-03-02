@@ -36,3 +36,7 @@ end
 Then /^the exit status must be (\d+)$/ do |exit_status|
   program_run_check status: exit_status.to_i
 end
+
+Then /^the program must terminate successfully$/ do
+  program_run_check status: 0
+end
