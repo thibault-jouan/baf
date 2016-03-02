@@ -10,6 +10,10 @@ module Baf
         registrant.register_flag env, option_parser, *args
       end
 
+      def flag_verbose registrant: OptionRegistrant
+        registrant.register_flag env, option_parser, :v, 'verbose'
+      end
+
       def option *args, registrant: OptionRegistrant
         registrant.register_option env, option_parser, Option.new(*args)
       end
