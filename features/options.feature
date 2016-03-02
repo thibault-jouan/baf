@@ -29,3 +29,17 @@ Feature: Options declaration
       """
     When I run the program with option -f bar
     Then the output must contain exactly "bar\n"
+
+  Scenario: supports built-in verbose option flag
+    Given the following baf program:
+      """
+      Class.new(Baf::CLI) do
+        flag_verbose
+
+        def run
+          puts env.verbose?
+        end
+      end.run(ARGV)
+      """
+    When I run the program with option -v
+    Then the output must contain exactly "true\n"

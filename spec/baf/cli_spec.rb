@@ -22,6 +22,18 @@ module Baf
       end
     end
 
+    describe '.flag_verbose' do
+      it 'registers basic verbose flag with an option registrant' do
+        # FIXME:
+        registrant = double 'registrant'
+        expect(registrant).to receive(:register_flag) do |_, _, short, long|
+          expect(short).to eq :v
+          expect(long).to eq 'verbose'
+        end
+        described_class.flag_verbose registrant: registrant
+      end
+    end
+
     describe '.option' do
       it 'registers given option with an option registrant' do
         registrant = double 'registrant'
