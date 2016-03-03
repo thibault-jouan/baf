@@ -5,47 +5,36 @@ module Baf
     let(:stdout)        { StringIO.new }
     let(:stderr)        { StringIO.new }
     let(:env)           { Env.new(stdout) }
-    let(:option_parser) { OptionParser.new }
     let(:arguments)     { %w[foo bar] }
-    subject(:cli)       { described_class.new env, option_parser, arguments }
+    let(:config)        { described_class.config }
+    let(:dsl)           { Class.new(described_class) }
+    subject(:cli)       { described_class.new env, arguments, config }
 
     describe '.flag' do
-      it 'registers given option flag with an option registrant' do
-        registrant = double 'registrant'
-        expect(registrant).to receive(:register_flag).with(
-          an_instance_of(Env),
-          an_instance_of(OptionParser),
-          :short,
-          :long
-        )
-        described_class.flag :short, :long, registrant: registrant
+      it 'configures the given flag' do
+        dsl.flag :f, :foo
+        expect(dsl.config[:flags])
+          .to include an_object_having_attributes short: :f, long: :foo
       end
     end
 
     describe '.flag_verbose' do
-      it 'registers basic verbose flag with an option registrant' do
-        registrant = double 'registrant'
-        expect(registrant).to receive(:register_flag) do |_, _, short, long|
-          expect(short).to eq :v
-          expect(long).to eq 'verbose'
-        end
-        described_class.flag_verbose registrant: registrant
+      it 'configures a verbose flag' do
+        dsl.flag_verbose
+        expect(dsl.config[:flags])
+          .to include an_object_having_attributes short: :v, long: 'verbose'
       end
     end
 
     describe '.option' do
-      it 'registers given option with an option registrant' do
-        registrant = double 'registrant'
-        expect(registrant).to receive :register_option do |env, parser, opt|
-          expect(env).to be_an Env
-          expect(parser).to be_an OptionParser
-          expect(opt.short).to eq :f
-          expect(opt.long).to eq :foo
-          expect(opt.arg).to eq 'VALUE'
-          expect(opt.desc).to eq 'set foo to VALUE'
-        end
-        described_class
-          .option :f, :foo, 'VALUE', 'set foo to VALUE', registrant: registrant
+      it 'configures the given option' do
+        dsl.option :f, :foo, 'VALUE', 'set foo to VALUE'
+        expect(dsl.config[:options]).to include an_object_having_attributes(
+          short:  :f,
+          long:   :foo,
+          arg:    'VALUE',
+          desc:   'set foo to VALUE'
+        )
       end
     end
 
@@ -106,14 +95,15 @@ module Baf
     end
 
     describe '#initialize' do
-      it 'adds a header for options on option parser' do
-        cli
-        expect(option_parser.to_s).to match /\n^options:\n\s+-/
-      end
+      let(:option_parser) { OptionParser.new }
+      let(:registrant)    { OptionsRegistrant }
+      let(:config)        { { parser: option_parser, registrant: registrant } }
 
-      it 'adds help option on option parser tail' do
+      it 'registers given config with the specified registrant' do
+        expect(registrant).to receive(:register).with(
+          env, option_parser, config
+        )
         cli
-        expect(option_parser.to_s).to match /^\s+-h,\s+--help\s+print this message\n/
       end
     end
 
@@ -130,6 +120,10 @@ module Baf
     end
 
     describe '#parse_arguments!' do
+      let(:option_parser) { OptionParser.new }
+
+      before { config[:parser] = option_parser }
+
       it 'asks the option parser to parse CLI arguments' do
         expect(option_parser).to receive(:parse!).with arguments
         cli.parse_arguments!

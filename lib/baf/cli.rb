@@ -1,3 +1,5 @@
+require 'baf/options_registrant'
+
 module Baf
   class CLI
     ArgumentError = Class.new(ArgumentError)
@@ -5,21 +7,32 @@ module Baf
     EX_USAGE    = 64
     EX_SOFTWARE = 70
 
+    CONFIG_DEFAULTS = {
+      flags:      [],
+      options:    [],
+      parser:     OptionParser.new,
+      registrant: OptionsRegistrant
+    }.freeze
+
     class << self
-      def flag *args, registrant: OptionRegistrant
-        registrant.register_flag env, option_parser, *args
+      def config
+        @config ||= CONFIG_DEFAULTS.dup
       end
 
-      def flag_verbose registrant: OptionRegistrant
-        registrant.register_flag env, option_parser, :v, 'verbose'
+      def flag *args
+        config[:flags] << Option.new(*args)
       end
 
-      def option *args, registrant: OptionRegistrant
-        registrant.register_option env, option_parser, Option.new(*args)
+      def flag_verbose
+        config[:flags] << Option.new(:v, 'verbose')
+      end
+
+      def option *args
+        config[:options] << Option.new(*args)
       end
 
       def run arguments, stdout: $stdout, stderr: $stderr
-        cli = new env(stdout), option_parser, arguments
+        cli = new Env.new(stdout), arguments, config
         cli.parse_arguments!
         cli.run
       rescue ArgumentError => e
@@ -34,23 +47,16 @@ module Baf
     protected
 
       Option = Struct.new('Option', :short, :long, :arg, :desc)
-
-      def env output = nil
-        @env ||= Env.new(output)
-      end
-
-      def option_parser
-        @option_parser ||= OptionParser.new
-      end
     end
 
     attr_reader :arguments, :env, :option_parser
 
-    def initialize env, option_parser, arguments
+    def initialize env, arguments, config
       @env            = env
-      @option_parser  = option_parser
+      @option_parser  = config[:parser]
       @arguments      = arguments
-      setup_default_options option_parser
+
+      config[:registrant].register env, config[:parser], config
     end
 
     def parse_arguments!
@@ -60,16 +66,6 @@ module Baf
     end
 
     def run
-    end
-
-  protected
-
-    def setup_default_options option_parser
-      option_parser.separator ''
-      option_parser.separator 'options:'
-      option_parser.on_tail '-h', '--help', 'print this message' do
-        env.print option_parser
-      end
     end
   end
 end
