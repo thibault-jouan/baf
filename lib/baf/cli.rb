@@ -27,6 +27,10 @@ module Baf
         config[:flags] << Option.new(:v, 'verbose')
       end
 
+      def flag_debug
+        config[:flags] << Option.new(:d, 'debug')
+      end
+
       def option *args
         config[:options] << Option.new(*args)
       end
