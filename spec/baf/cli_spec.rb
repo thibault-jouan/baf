@@ -26,6 +26,14 @@ module Baf
       end
     end
 
+    describe '.flag_debug' do
+      it 'configures a debug flag' do
+        dsl.flag_debug
+        expect(dsl.config[:flags])
+          .to include an_object_having_attributes short: :d, long: 'debug'
+      end
+    end
+
     describe '.option' do
       it 'configures the given option' do
         dsl.option :f, :foo, 'VALUE', 'set foo to VALUE'
