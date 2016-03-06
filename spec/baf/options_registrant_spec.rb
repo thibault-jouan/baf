@@ -6,9 +6,8 @@ module Baf
     subject(:registrant)  { OptionsRegistrant.new env, parser, config }
 
     describe '#register' do
-      let(:flag)    { double 'option', short: :v, long: :verbose }
-      let(:option)  { double 'option', short: :f, long: :foo, arg: 'VALUE',
-                        desc: 'set foo to VALUE' }
+      let(:flag)    { Option.new(:v, :verbose) }
+      let(:option)  { Option.new(:f, :foo, 'VALUE', 'set foo to VALUE') }
       let(:config)  { { flags: [flag], options: [option] } }
 
       it 'registers flags' do
@@ -54,13 +53,7 @@ module Baf
     end
 
     describe '#option' do
-      let :option do
-        double 'option',
-          short:  :f,
-          long:   :foo,
-          arg:    'VALUE',
-          desc:   'set foo to VALUE'
-      end
+      let(:option) { Option.new(:f, :foo, 'VALUE', 'set foo to VALUE') }
 
       before { registrant.option option }
 

@@ -1,3 +1,4 @@
+require 'baf/option'
 require 'baf/options_registrant'
 
 module Baf
@@ -47,10 +48,6 @@ module Baf
         stderr.puts e.backtrace.map { |l| '  %s' % l }
         exit EX_SOFTWARE
       end
-
-    protected
-
-      Option = Struct.new('Option', :short, :long, :arg, :desc)
     end
 
     attr_reader :arguments, :env, :option_parser
