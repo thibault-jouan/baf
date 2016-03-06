@@ -1,9 +1,13 @@
+require 'optparse'
+
+require 'baf'
+require 'baf/env'
 require 'baf/option'
 require 'baf/options_registrant'
 
 module Baf
   class CLI
-    ArgumentError = Class.new(ArgumentError)
+    ArgumentError = Class.new(::Baf::ArgumentError)
 
     EX_USAGE    = 64
     EX_SOFTWARE = 70

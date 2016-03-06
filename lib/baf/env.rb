@@ -1,3 +1,5 @@
+require 'forwardable'
+
 module Baf
   class Env
     extend Forwardable

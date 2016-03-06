@@ -1,3 +1,7 @@
+require 'baf/env'
+require 'baf/option'
+require 'baf/options_registrant'
+
 module Baf
   RSpec.describe OptionsRegistrant do
     let(:env)             { Env.new(StringIO.new) }

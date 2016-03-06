@@ -1,3 +1,5 @@
+require 'baf/cli'
+
 module Baf
   RSpec.describe CLI do
     include ExitHelpers

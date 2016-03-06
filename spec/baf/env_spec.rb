@@ -1,3 +1,5 @@
+require 'baf/env'
+
 module Baf
   RSpec.describe Env do
     let(:output)  { StringIO.new }
