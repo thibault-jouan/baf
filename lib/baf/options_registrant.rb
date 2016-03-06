@@ -27,7 +27,7 @@ module Baf
 
     def option opt
       define_env_accessor env, opt.long
-      parser.on "-#{opt.short}", "--#{opt.long} #{opt.arg}", opt.desc do |v|
+      parser.on *opt.to_parser_arguments do |v|
         env.send :"#{opt.long}=", v
       end
     end
