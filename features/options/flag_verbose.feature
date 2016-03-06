@@ -1,0 +1,15 @@
+Feature: Built-in verbose option flag declaration
+
+  Scenario: supports built-in verbose option flag
+    Given the following baf program:
+      """
+      Class.new(Baf::CLI) do
+        flag_verbose
+
+        def run
+          puts env.verbose?
+        end
+      end.run(ARGV)
+      """
+    When I run the program with option -v
+    Then the output must contain exactly "true\n"
