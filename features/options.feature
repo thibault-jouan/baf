@@ -30,6 +30,20 @@ Feature: Options declaration
     When I run the program with option -f bar
     Then the output must contain exactly "bar\n"
 
+  Scenario: converts `_' to `-' in long options
+    Given the following baf program:
+      """
+      Class.new(Baf::CLI) do
+        option :f, :foo_option, 'VALUE', 'set foo to VALUE'
+
+        def run
+          puts env.foo_option
+        end
+      end.run(ARGV)
+      """
+    When I run the program with option --foo-option bar
+    Then the output must contain exactly "bar\n"
+
   Scenario: supports built-in verbose option flag
     Given the following baf program:
       """

@@ -18,5 +18,32 @@ module Baf
         )
       end
     end
+
+    describe '#to_parser_arguments' do
+      it 'returns suitable arguments for an OptionParser option' do
+        expect(option.to_parser_arguments).to match [
+          a_string_including(?f),
+          a_string_including('foo'),
+          a_string_including('foo')
+        ]
+      end
+
+      it 'prepends `-\' to the short option' do
+        expect(option.to_parser_arguments[0]).to eq '-f'
+      end
+
+      it 'prepends `--\' to the long option' do
+        expect(option.to_parser_arguments[1]).to start_with '--foo'
+      end
+
+      it 'appends the long option argument after a space' do
+        expect(option.to_parser_arguments[1]).to end_with 'foo VALUE'
+      end
+
+      it 'converts `_\' to `-\' in long option' do
+        option.long = :foo_option
+        expect(option.to_parser_arguments[1]).to match /foo-option/
+      end
+    end
   end
 end
