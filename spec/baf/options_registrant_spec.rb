@@ -6,33 +6,16 @@ module Baf
   RSpec.describe OptionsRegistrant do
     let(:env)             { Env.new(StringIO.new) }
     let(:parser)          { OptionParser.new }
-    let(:config)          { {} }
-    subject(:registrant)  { OptionsRegistrant.new env, parser, config }
+    subject(:registrant)  { OptionsRegistrant.new env, parser }
 
-    describe '#register' do
-      let(:flag)    { Option.new(:v, :verbose) }
-      let(:option)  { Option.new(:f, :foo, 'VALUE', 'set foo to VALUE') }
-      let(:config)  { { flags: [flag], options: [option] } }
-
-      it 'registers flags' do
-        registrant.register
-        parser.parse! %w[-v]
-        expect(env).to be_verbose
-      end
-
-      it 'registers options' do
-        registrant.register
-        parser.parse! %w[-f bar]
-        expect(env.foo).to eq 'bar'
-      end
+    describe '#register_default_options' do
+      before { registrant.register_default_options }
 
       it 'adds a header for options on the parser' do
-        registrant.register
         expect(parser.to_s).to match /\n^options:\n\s+-/
       end
 
       it 'adds help option on option parser tail' do
-        registrant.register
         expect(parser.to_s).to match /^\s+-h,\s+--help\s+print this message\n/
       end
     end
@@ -57,9 +40,7 @@ module Baf
     end
 
     describe '#option' do
-      let(:option) { Option.new(:f, :foo, 'VALUE', 'set foo to VALUE') }
-
-      before { registrant.option option }
+      before { registrant.option :f, :foo, 'VALUE', 'set foo to VALUE' }
 
       it 'defines an env accessor named after long option' do
         env.foo = :bar

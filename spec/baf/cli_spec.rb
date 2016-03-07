@@ -4,49 +4,13 @@ module Baf
   RSpec.describe CLI do
     include ExitHelpers
 
-    let(:stdout)        { StringIO.new }
-    let(:stderr)        { StringIO.new }
-    let(:env)           { Env.new(stdout) }
-    let(:arguments)     { %w[foo bar] }
-    let(:config)        { described_class.config }
-    let(:dsl)           { Class.new(described_class) }
-    subject(:cli)       { described_class.new env, arguments, config }
-
-    describe '.flag' do
-      it 'configures the given flag' do
-        dsl.flag :f, :foo
-        expect(dsl.config[:flags])
-          .to include an_object_having_attributes short: :f, long: :foo
-      end
-    end
-
-    describe '.flag_verbose' do
-      it 'configures a verbose flag' do
-        dsl.flag_verbose
-        expect(dsl.config[:flags])
-          .to include an_object_having_attributes short: :v, long: 'verbose'
-      end
-    end
-
-    describe '.flag_debug' do
-      it 'configures a debug flag' do
-        dsl.flag_debug
-        expect(dsl.config[:flags])
-          .to include an_object_having_attributes short: :d, long: 'debug'
-      end
-    end
-
-    describe '.option' do
-      it 'configures the given option' do
-        dsl.option :f, :foo, 'VALUE', 'set foo to VALUE'
-        expect(dsl.config[:options]).to include an_object_having_attributes(
-          short:  :f,
-          long:   :foo,
-          arg:    'VALUE',
-          desc:   'set foo to VALUE'
-        )
-      end
-    end
+    let(:stdout)      { StringIO.new }
+    let(:stderr)      { StringIO.new }
+    let(:env)         { Env.new(stdout) }
+    let(:arguments)   { %w[foo bar] }
+    let(:parser)      { OptionParser.new }
+    let(:registrant)  { OptionsRegistrant.new(env, parser) }
+    subject(:cli)     { described_class.new env, arguments }
 
     describe '.run' do
       subject(:run) { described_class.run arguments, stderr: stderr }
@@ -105,15 +69,21 @@ module Baf
     end
 
     describe '#initialize' do
-      let(:option_parser) { OptionParser.new }
-      let(:registrant)    { OptionsRegistrant }
-      let(:config)        { { parser: option_parser, registrant: registrant } }
+      # FIXME: refactor?
+      subject :cli do
+        described_class.new env, arguments, registrant: registrant
+      end
 
-      it 'registers given config with the specified registrant' do
-        expect(registrant).to receive(:register).with(
-          env, option_parser, config
-        )
+      it 'tells the registrant to register default options' do
+        expect(registrant).to receive :register_default_options
         cli
+      end
+
+      it 'sends the :setup message to itself' do
+        my_cli_class = Class.new(CLI) do
+          define_method(:setup) { throw :my_setup }
+        end
+        expect { my_cli_class.new env, arguments }.to throw_symbol :my_setup
       end
     end
 
@@ -129,13 +99,57 @@ module Baf
       end
     end
 
-    describe '#parse_arguments!' do
-      let(:option_parser) { OptionParser.new }
+    describe '#flag' do
+      subject :cli do
+        described_class.new env, arguments, registrant: registrant
+      end
 
-      before { config[:parser] = option_parser }
+      it 'tells the registrant to register given flag' do
+        expect(registrant).to receive(:flag).with :f, :foo
+        cli.flag :f, :foo
+      end
+    end
+
+    describe '#flag_verbose' do
+      subject :cli do
+        described_class.new env, arguments, registrant: registrant
+      end
+
+      it 'tells the registrant to register -v --verbose flag' do
+        expect(registrant).to receive(:flag).with :v, 'verbose'
+        cli.flag_verbose
+      end
+    end
+
+    describe '#flag_verbose' do
+      subject :cli do
+        described_class.new env, arguments, registrant: registrant
+      end
+
+      it 'tells the registrant to register -d --debug flag' do
+        expect(registrant).to receive(:flag).with :d, 'debug'
+        cli.flag_debug
+      end
+    end
+
+    describe '#option' do
+      subject :cli do
+        described_class.new env, arguments, registrant: registrant
+      end
+
+      it 'tells the registrant to register given option' do
+        expect(registrant)
+          .to receive(:option)
+          .with :f, :foo, 'VALUE', 'set foo to VALUE'
+        cli.option :f, :foo, 'VALUE', 'set foo to VALUE'
+      end
+    end
+
+    describe '#parse_arguments!' do
+      subject(:cli) { described_class.new env, arguments, parser: parser }
 
       it 'asks the option parser to parse CLI arguments' do
-        expect(option_parser).to receive(:parse!).with arguments
+        expect(parser).to receive(:parse!).with arguments
         cli.parse_arguments!
       end
 

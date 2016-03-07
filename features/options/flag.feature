@@ -4,8 +4,10 @@ Feature: Option flag declaration
     Given the following baf program:
       """
       Class.new(Baf::CLI) do
-        flag :f, :foo
-        flag :b, :bar
+        def setup
+          flag :f, :foo
+          flag :b, :bar
+        end
 
         def run
           puts env.foo?

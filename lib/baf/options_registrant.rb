@@ -1,21 +1,16 @@
 module Baf
   class OptionsRegistrant
-    class << self
-      def register *args
-        new(*args).register
-      end
-    end
-
-    def initialize env, parser, config
+    def initialize env, parser
       @env    = env
       @parser = parser
-      @config = config
     end
 
-    def register
-      declare_default_options
-      config[:flags].each   { |o| flag o.short, o.long }
-      config[:options].each { |o| option o }
+    def register_default_options
+      parser.separator ''
+      parser.separator 'options:'
+      parser.on_tail '-h', '--help', 'print this message' do
+        env.print parser
+      end
     end
 
     def flag short, long
@@ -25,7 +20,8 @@ module Baf
       end
     end
 
-    def option opt
+    def option *args
+      opt = Option.new(*args)
       define_env_accessor env, opt.long
       parser.on *opt.to_parser_arguments do |v|
         env.send :"#{opt.long}=", v
@@ -35,14 +31,6 @@ module Baf
   protected
 
     attr_reader :env, :parser, :config
-
-    def declare_default_options
-      parser.separator ''
-      parser.separator 'options:'
-      parser.on_tail '-h', '--help', 'print this message' do
-        env.print parser
-      end
-    end
 
     def define_env_accessor env, name
       (class << env; self end).send :attr_accessor, name

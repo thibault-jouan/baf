@@ -12,36 +12,9 @@ module Baf
     EX_USAGE    = 64
     EX_SOFTWARE = 70
 
-    CONFIG_DEFAULTS = {
-      flags:      [],
-      options:    [],
-      parser:     OptionParser.new,
-      registrant: OptionsRegistrant
-    }.freeze
-
     class << self
-      def config
-        @config ||= CONFIG_DEFAULTS.dup
-      end
-
-      def flag *args
-        config[:flags] << Option.new(*args)
-      end
-
-      def flag_verbose
-        config[:flags] << Option.new(:v, 'verbose')
-      end
-
-      def flag_debug
-        config[:flags] << Option.new(:d, 'debug')
-      end
-
-      def option *args
-        config[:options] << Option.new(*args)
-      end
-
       def run arguments, stdout: $stdout, stderr: $stderr
-        cli = new Env.new(stdout), arguments, config
+        cli = new Env.new(stdout), arguments
         cli.parse_arguments!
         cli.run
       rescue ArgumentError => e
@@ -54,23 +27,48 @@ module Baf
       end
     end
 
-    attr_reader :arguments, :env, :option_parser
+    attr_reader :arguments, :env, :parser
 
-    def initialize env, arguments, config
-      @env            = env
-      @option_parser  = config[:parser]
-      @arguments      = arguments
+    def initialize env, arguments, **opts
+      @env        = env
+      @arguments  = arguments
+      @parser     = opts[:parser]     || OptionParser.new
+      @registrant = opts[:registrant] || OptionsRegistrant.new(env, parser)
 
-      config[:registrant].register env, config[:parser], config
+      registrant.register_default_options
+      setup
+    end
+
+    def setup
+    end
+
+    def flag *args
+      registrant.flag *args
+    end
+
+    def flag_debug
+      flag :d, 'debug'
+    end
+
+    def flag_verbose
+      flag :v, 'verbose'
+    end
+
+    def option *args
+      registrant.option *args
     end
 
     def parse_arguments!
-      option_parser.parse! arguments
+      parser.parse! arguments
     rescue OptionParser::InvalidOption
-      raise ArgumentError, option_parser
+      raise ArgumentError, parser
     end
 
     def run
     end
+
+  private
+
+    attr_reader :registrant
   end
 end
