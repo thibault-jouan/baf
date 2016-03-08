@@ -69,7 +69,6 @@ module Baf
     end
 
     describe '#initialize' do
-      # FIXME: refactor?
       subject :cli do
         described_class.new env, arguments, registrant: registrant
       end
