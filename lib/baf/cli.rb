@@ -54,6 +54,10 @@ module Baf
       flag :v, 'verbose'
     end
 
+    def flag_version version
+      flag :V, 'version', -> env { env.puts version }
+    end
+
     def option *args
       registrant.option *args
     end
