@@ -4,7 +4,9 @@ Feature: Built-in verbose option flag declaration
     Given the following baf program:
       """
       Class.new(Baf::CLI) do
-        flag_verbose
+        def setup
+          flag_verbose
+        end
 
         def run
           puts env.verbose?

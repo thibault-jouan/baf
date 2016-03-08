@@ -4,7 +4,9 @@ Feature: Built-in debug option flag declaration
     Given the following baf program:
       """
       Class.new(Baf::CLI) do
-        flag_debug
+        def setup
+          flag_debug
+        end
 
         def run
           puts env.debug?

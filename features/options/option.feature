@@ -4,7 +4,9 @@ Feature: Option declaration
     Given the following baf program:
       """
       Class.new(Baf::CLI) do
-        option :f, :foo, 'VALUE', 'set foo to VALUE'
+        def setup
+          option :f, :foo, 'VALUE', 'set foo to VALUE'
+        end
 
         def run
           puts env.foo
@@ -18,7 +20,9 @@ Feature: Option declaration
     Given the following baf program:
       """
       Class.new(Baf::CLI) do
-        option :f, :foo_option, 'VALUE', 'set foo to VALUE'
+        def setup
+          option :f, :foo_option, 'VALUE', 'set foo to VALUE'
+        end
 
         def run
           puts env.foo_option
