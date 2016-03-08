@@ -109,14 +109,14 @@ module Baf
       end
     end
 
-    describe '#flag_verbose' do
+    describe '#flag_debug' do
       subject :cli do
         described_class.new env, arguments, registrant: registrant
       end
 
-      it 'tells the registrant to register -v --verbose flag' do
-        expect(registrant).to receive(:flag).with :v, 'verbose'
-        cli.flag_verbose
+      it 'tells the registrant to register -d --debug flag' do
+        expect(registrant).to receive(:flag).with :d, 'debug'
+        cli.flag_debug
       end
     end
 
@@ -125,9 +125,9 @@ module Baf
         described_class.new env, arguments, registrant: registrant
       end
 
-      it 'tells the registrant to register -d --debug flag' do
-        expect(registrant).to receive(:flag).with :d, 'debug'
-        cli.flag_debug
+      it 'tells the registrant to register -v --verbose flag' do
+        expect(registrant).to receive(:flag).with :v, 'verbose'
+        cli.flag_verbose
       end
     end
 
