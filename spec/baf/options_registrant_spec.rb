@@ -37,6 +37,21 @@ module Baf
         parser.parse! %w[-v]
         expect(env).to be_verbose
       end
+
+      context 'when given a block' do
+        let(:block) { proc { throw :option_block } }
+
+        before { registrant.flag :f, :foo, block }
+
+        it 'does not define the predicate method' do
+          expect(env).not_to respond_to :foo?
+        end
+
+        it 'adds an option handler with given block to the parser' do
+          expect { parser.parse! %w[-f bar] }
+            .to throw_symbol :option_block
+        end
+      end
     end
 
     describe '#option' do
