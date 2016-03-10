@@ -13,10 +13,15 @@ module Baf
       end
     end
 
-    def flag short, long
-      define_env_flag env, long
-      parser.on "-#{short}", "--#{long}", "enable #{long} mode" do
-        env.send :"#{long}=", true
+    def flag *args
+      opt = Option.new(*args)
+      if opt.block
+        parser.on(*opt.to_parser_arguments) { opt.block[env] }
+      else
+        define_env_flag env, opt.long
+        parser.on "-#{opt.short}", "--#{opt.long}", "enable #{opt.long} mode" do
+          env.send :"#{opt.long}=", true
+        end
       end
     end
 

@@ -131,6 +131,23 @@ module Baf
       end
     end
 
+    describe '#flag_version' do
+      subject :cli do
+        described_class.new env, arguments, registrant: registrant
+      end
+
+      # FIXME: aggregate
+      it 'tells the registrant to register a flag printing given version' do
+        expect(registrant).to receive(:flag) do |short, long, block|
+          expect(short).to eq :V
+          expect(long).to eq 'version'
+          block.call env
+        end
+        cli.flag_version '0.13.42'
+        expect(stdout.string).to include '0.13.42'
+      end
+    end
+
     describe '#option' do
       subject :cli do
         described_class.new env, arguments, registrant: registrant

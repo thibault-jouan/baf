@@ -6,9 +6,16 @@ module Baf
     subject(:env) { Env.new output }
 
     describe '#print' do
-      it 'prints the message to the output' do
+      it 'prints given argument to the output' do
         env.print 'something'
         expect(output.string).to eq 'something'
+      end
+    end
+
+    describe '#puts' do
+      it 'prints given arg to the output with input record separator suffix' do
+        env.puts 'something'
+        expect(output.string).to eq 'something' + $/
       end
     end
   end
