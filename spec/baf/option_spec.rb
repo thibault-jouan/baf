@@ -17,6 +17,21 @@ module Baf
           desc:   'set foo to VALUE'
         )
       end
+
+      context 'when given a block' do
+        subject(:option) { described_class.new short, long, -> { :some_block } }
+
+        it 'assigns short and long attributes' do
+          expect(option).to have_attributes(
+            short:  :f,
+            long:   'foo'
+          )
+        end
+
+        it 'assigns the block' do
+          expect(option.block.call).to eq :some_block
+        end
+      end
     end
 
     describe '#to_parser_arguments' do
