@@ -18,14 +18,27 @@ module Baf
         )
       end
 
-      context 'when given a block' do
-        subject(:option) { described_class.new short, long, -> { :some_block } }
+      context 'when given short and long' do
+        subject(:option) { described_class.new short, long }
 
-        it 'assigns short and long attributes' do
-          expect(option).to have_attributes(
-            short:  :f,
-            long:   'foo'
-          )
+        it { is_expected.to have_attributes short: :f, long: 'foo' }
+      end
+
+      context 'when given short, long, arg and desc' do
+        it do
+          is_expected.to have_attributes short: :f, long: 'foo',
+            arg: 'VALUE', desc: 'set foo to VALUE'
+        end
+      end
+
+      context 'when given short, long, desc and block' do
+        subject :option do
+          described_class.new short, long, desc, -> { :some_block }
+        end
+
+        it do
+          is_expected.to have_attributes short: :f, long: 'foo',
+            desc: 'set foo to VALUE'
         end
 
         it 'assigns the block' do
@@ -58,6 +71,11 @@ module Baf
       it 'converts `_\' to `-\' in long option' do
         option.long = :foo_option
         expect(option.to_parser_arguments[1]).to match /foo-option/
+      end
+
+      it 'does not append a trailing space when arg is nil' do
+        option.arg = nil
+        expect(option.to_parser_arguments[1]).to end_with 'foo'
       end
     end
   end

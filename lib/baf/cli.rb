@@ -55,7 +55,7 @@ module Baf
     end
 
     def flag_version version
-      flag :V, 'version', -> env { env.puts version }
+      flag :V, 'version', 'print version', -> env { env.puts version }
     end
 
     def option *args
