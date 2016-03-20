@@ -13,16 +13,23 @@ module Baf
 
   protected
 
-    def build_attrs(short, long, arg_or_block = nil, desc = nil)
+    def build_attrs(short, long, arg_or_desc = nil, desc_or_block = nil)
       {
         short:  short,
-        long:   long,
-        desc:   desc
-      }.tap do |attrs|
-        case arg_or_block
-          when Proc   then attrs[:block]  = arg_or_block
-          when String then attrs[:arg]    = arg_or_block
-        end
+        long:   long
+      }.merge case desc_or_block
+      when Proc
+        {
+          desc:   arg_or_desc,
+          block:  desc_or_block
+        }
+      when String
+        {
+          arg:  arg_or_desc,
+          desc: desc_or_block
+        }
+      else
+        {}
       end
     end
 
@@ -30,7 +37,7 @@ module Baf
       [
         '--' + long.to_s.tr(?_, ?-),
         arg
-      ].join ' '
+      ].compact.join ' '
     end
   end
 end

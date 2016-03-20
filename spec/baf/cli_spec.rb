@@ -138,9 +138,10 @@ module Baf
 
       # FIXME: aggregate
       it 'tells the registrant to register a flag printing given version' do
-        expect(registrant).to receive(:flag) do |short, long, block|
+        expect(registrant).to receive(:flag) do |short, long, desc, block|
           expect(short).to eq :V
           expect(long).to eq 'version'
+          expect(desc).to eq 'print version'
           block.call env
         end
         cli.flag_version '0.13.42'

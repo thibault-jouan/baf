@@ -41,7 +41,7 @@ module Baf
       context 'when given a block' do
         let(:block) { proc { throw :option_block } }
 
-        before { registrant.flag :f, :foo, block }
+        before { registrant.flag :f, :foo, 'foo description', block }
 
         it 'does not define the predicate method' do
           expect(env).not_to respond_to :foo?
