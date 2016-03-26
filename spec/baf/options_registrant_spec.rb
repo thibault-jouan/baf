@@ -52,6 +52,15 @@ module Baf
             .to throw_symbol :option_block
         end
       end
+
+      context 'when given tail option' do
+        before { registrant.flag :f, :foo, tail: true }
+
+        it 'appends the option on tail' do
+          registrant.flag :b, :bar
+          expect(parser.help).to match /bar.+foo/m
+        end
+      end
     end
 
     describe '#option' do

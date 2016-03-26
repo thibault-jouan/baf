@@ -138,11 +138,12 @@ module Baf
 
       it 'tells the registrant to register a flag printing given version' do
         aggregate_failures 'flag arguments' do
-          expect(registrant).to receive(:flag) do |short, long, desc, block|
+          expect(registrant).to receive :flag do |short, long, desc, block, opts|
             expect(short).to eq :V
             expect(long).to eq 'version'
             expect(desc).to eq 'print version'
             block.call env
+            expect(opts).to include tail: true
           end
           cli.flag_version '0.13.42'
           expect(stdout.string).to include '0.13.42'

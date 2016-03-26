@@ -13,13 +13,17 @@ module Baf
       end
     end
 
-    def flag *args
+    def flag *args, tail: false
       opt = Option.new(*args)
+      position = tail ? :on_tail : :on
       if opt.block
-        parser.on(*opt.to_parser_arguments) { opt.block[env] }
+        parser.send position, *opt.to_parser_arguments do
+          opt.block[env]
+        end
       else
         define_env_flag env, opt.long
-        parser.on "-#{opt.short}", "--#{opt.long}", "enable #{opt.long} mode" do
+        parser.send position,
+            "-#{opt.short}", "--#{opt.long}", "enable #{opt.long} mode" do
           env.send :"#{opt.long}=", true
         end
       end
