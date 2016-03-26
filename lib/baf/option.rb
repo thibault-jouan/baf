@@ -13,7 +13,7 @@ module Baf
 
   protected
 
-    def build_attrs(short, long, arg_or_desc = nil, desc_or_block = nil)
+    def build_attrs short, long, arg_or_desc = nil, desc_or_block = nil
       {
         short:  short,
         long:   long
