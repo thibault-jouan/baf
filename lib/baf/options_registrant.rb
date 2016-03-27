@@ -30,7 +30,7 @@ module Baf
       register_default_options
     end
 
-  protected
+  private
 
     attr_reader :env, :parser, :options
 

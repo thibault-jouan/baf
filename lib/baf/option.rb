@@ -26,7 +26,7 @@ module Baf
       [message, "-#{short}", parser_argument_long, parser_argument_desc, mblock]
     end
 
-  protected
+  private
 
     def build_attrs short, long, arg_or_desc = nil, desc_or_block = nil
       {

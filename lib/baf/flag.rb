@@ -8,7 +8,7 @@ module Baf
       :predicate
     end
 
-  protected
+  private
 
     def parser_argument_desc
       if desc then super else DESCRIPTION_FORMAT % long end
