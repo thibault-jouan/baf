@@ -61,7 +61,7 @@ module Baf
 
     def register_flag opt
       position = opt.tail ? :on_tail : :on
-      if opt.block
+      if opt.block?
         parser.send position, *opt.to_parser_arguments do
           opt.block[env]
         end

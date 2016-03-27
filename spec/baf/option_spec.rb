@@ -59,6 +59,18 @@ module Baf
       end
     end
 
+    describe '#block?' do
+      it 'returns false when no block is assigned' do
+        option.block = nil
+        expect(option.block?).to be false
+      end
+
+      it 'returns true when no block is assigned' do
+        option.block = -> {}
+        expect(option.block?).to be true
+      end
+    end
+
     describe '#flag?' do
       it 'returns false when option is not a flag' do
         expect(option.flag?).to be false

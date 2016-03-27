@@ -9,6 +9,10 @@ module Baf
       self.tail = tail
     end
 
+    def block?
+      !!block
+    end
+
     def flag?
       !!flag
     end
