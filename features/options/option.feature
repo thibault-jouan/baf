@@ -31,3 +31,15 @@ Feature: Option declaration
       """
     When I successfully run the program with option --foo-option bar
     Then the output must contain exactly "bar\n"
+
+  Scenario: describes the option in usage options summary
+    Given the following baf program:
+      """
+      Class.new(Baf::CLI) do
+        def setup
+          option :f, :foo, 'VALUE', 'set foo to VALUE'
+        end
+      end.run(ARGV)
+      """
+    When I successfully run the program with option -h
+    Then the output must match /-f.+--foo.+set foo to VALUE/
