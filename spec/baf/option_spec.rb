@@ -45,6 +45,40 @@ module Baf
           expect(option.block.call).to eq :some_block
         end
       end
+
+      context 'when given flag option' do
+        subject(:option) { described_class.new short, long, flag: true }
+
+        it { is_expected.to be_flag }
+      end
+
+      context 'when given tail option' do
+        subject(:option) { described_class.new short, long, tail: true }
+
+        it { is_expected.to be_tail }
+      end
+    end
+
+    describe '#flag?' do
+      it 'returns false when option is not a flag' do
+        expect(option.flag?).to be false
+      end
+
+      it 'returns true when option is a flag' do
+        option.flag = true
+        expect(option.flag?).to be true
+      end
+    end
+
+    describe '#tail?' do
+      it 'returns false when option is not at tail' do
+        expect(option.tail?).to be false
+      end
+
+      it 'returns true when option is at tail' do
+        option.tail = true
+        expect(option.tail?).to be true
+      end
     end
 
     describe '#to_parser_arguments' do

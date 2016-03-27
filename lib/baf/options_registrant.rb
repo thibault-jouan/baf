@@ -1,17 +1,17 @@
 module Baf
   class OptionsRegistrant
-    def initialize env, parser
+    def initialize env, parser, options = []
       @env      = env
       @parser   = parser
-      @options  = []
+      @options  = options
     end
 
     def register
-      yield
+      yield if block_given?
       options.each do |opt|
-        define_env_accessor env, opt.long
-        parser.on *opt.to_parser_arguments do |v|
-          env.send :"#{opt.long}=", v
+        case opt.flag
+          when true   then register_flag opt
+          when false  then register_option opt
         end
       end
       register_default_options
@@ -25,20 +25,8 @@ module Baf
       end
     end
 
-    def flag *args, tail: false
-      opt = Option.new(*args)
-      position = tail ? :on_tail : :on
-      if opt.block
-        parser.send position, *opt.to_parser_arguments do
-          opt.block[env]
-        end
-      else
-        define_env_flag env, opt.long
-        parser.send position,
-            "-#{opt.short}", "--#{opt.long}", "enable #{opt.long} mode" do
-          env.send :"#{opt.long}=", true
-        end
-      end
+    def flag *args, **opts
+      options << Option.new(*args, flag: true, **opts)
     end
 
     def option *args
@@ -60,6 +48,28 @@ module Baf
         instance_variable_get :"@#{name}"
       end
       env.instance_variable_set :"@#{name}", false
+    end
+
+    def register_flag opt
+      position = opt.tail ? :on_tail : :on
+      if opt.block
+        parser.send position, *opt.to_parser_arguments do
+          opt.block[env]
+        end
+      else
+        define_env_flag env, opt.long
+        parser.send position,
+            "-#{opt.short}", "--#{opt.long}", "enable #{opt.long} mode" do
+          env.send :"#{opt.long}=", true
+        end
+      end
+    end
+
+    def register_option opt
+      define_env_accessor env, opt.long
+      parser.on *opt.to_parser_arguments do |v|
+        env.send :"#{opt.long}=", v
+      end
     end
   end
 end

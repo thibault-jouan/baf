@@ -6,42 +6,70 @@ module Baf
   RSpec.describe OptionsRegistrant do
     let(:env)             { Env.new(StringIO.new) }
     let(:parser)          { OptionParser.new }
-    subject(:registrant)  { OptionsRegistrant.new env, parser }
+    let(:options)         { [] }
+    subject(:registrant)  { OptionsRegistrant.new env, parser, options }
 
-    describe '#register_default_options' do
-      before { registrant.register_default_options }
+    describe '#flag' do
+      it 'adds a new option' do
+        expect { registrant.flag :v, :verbose }
+          .to change { options.size }
+          .by 1
+      end
+    end
 
+    describe '#option' do
+      it 'adds a new option' do
+        expect { registrant.option :f, :foo, 'VALUE', 'set foo to VALUE' }
+          .to change { options.size }
+          .by 1
+      end
+    end
+
+    describe '#register' do
       it 'adds a header for options on the parser' do
+        registrant.register
         expect(parser.to_s).to match /\n^options:\n\s+-/
       end
 
       it 'adds help option on option parser tail' do
+        registrant.register
         expect(parser.to_s).to match /^\s+-h,\s+--help\s+print this message\n/
       end
-    end
 
-    describe '#flag' do
-      before { registrant.flag :v, :verbose }
-
-      it 'defines an env accessor named after long option' do
-        env.verbose = :foo
-        expect(env.verbose).to eq :foo
+      it 'yields the given block' do
+        expect { |b| registrant.register &b }
+          .to yield_control
       end
 
-      it 'defines a predicate method named after long option' do
-        env.verbose = true
-        expect(env).to be_verbose
+      context 'when a flag is declared' do
+        before do
+          registrant.flag :v, :verbose
+          registrant.register
+        end
+
+        it 'defines an env accessor named after long option' do
+          env.verbose = :foo
+          expect(env.verbose).to eq :foo
+        end
+
+        it 'defines a predicate method named after long option' do
+          env.verbose = true
+          expect(env).to be_verbose
+        end
+
+        it 'adds an option handler to the parser' do
+          parser.parse! %w[-v]
+          expect(env).to be_verbose
+        end
       end
 
-      it 'adds an option handler to the parser' do
-        parser.parse! %w[-v]
-        expect(env).to be_verbose
-      end
-
-      context 'when given a block' do
+      context 'when a flag with a block is declared' do
         let(:block) { proc { throw :option_block } }
 
-        before { registrant.flag :f, :foo, 'foo description', block }
+        before do
+          registrant.flag :f, :foo, 'foo description', block
+          registrant.register
+        end
 
         it 'does not define the predicate method' do
           expect(env).not_to respond_to :foo?
@@ -53,27 +81,31 @@ module Baf
         end
       end
 
-      context 'when given tail option' do
+      context 'when a flag is declared at tail' do
         before { registrant.flag :f, :foo, tail: true }
 
         it 'appends the option on tail' do
           registrant.flag :b, :bar
+          registrant.register
           expect(parser.help).to match /bar.+foo/m
         end
       end
-    end
 
-    describe '#option' do
-      before { registrant.option :f, :foo, 'VALUE', 'set foo to VALUE' }
+      context 'when an option is declared' do
+        before do
+          registrant.option :f, :foo, 'VALUE', 'set foo to VALUE'
+          registrant.register
+        end
 
-      it 'defines an env accessor named after long option' do
-        env.foo = :bar
-        expect(env.foo).to eq :bar
-      end
+        it 'defines an env accessor named after long option' do
+          env.foo = :bar
+          expect(env.foo).to eq :bar
+        end
 
-      it 'adds an option handler to the parser' do
-        parser.parse! %w[-f bar]
-        expect(env.foo).to eq 'bar'
+        it 'adds an option handler to the parser' do
+          parser.parse! %w[-f bar]
+          expect(env.foo).to eq 'bar'
+        end
       end
     end
   end
