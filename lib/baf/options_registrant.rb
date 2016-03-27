@@ -39,7 +39,7 @@ module Baf
 
   protected
 
-    attr_reader :env, :parser, :config
+    attr_reader :env, :parser
 
     def define_env_accessor env, name
       (class << env; self end).send :attr_accessor, name
