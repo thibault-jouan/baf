@@ -42,6 +42,14 @@ module Baf
       env.instance_variable_set :"@#{name}", false
     end
 
+    def env_flag! name
+      env_flag_set name, true
+    end
+
+    def env_flag_set name, value
+      env.send :"#{name}=", value
+    end
+
     def register_default_options
       parser.separator ''
       parser.separator 'options:'
@@ -60,7 +68,7 @@ module Baf
         define_env_flag env, opt.long
         parser.send position,
             "-#{opt.short}", "--#{opt.long}", "enable #{opt.long} mode" do
-          env.send :"#{opt.long}=", true
+          env_flag! opt.long
         end
       end
     end
@@ -68,7 +76,7 @@ module Baf
     def register_option opt
       define_env_accessor env, opt.long
       parser.on *opt.to_parser_arguments do |v|
-        env.send :"#{opt.long}=", v
+        self.env_flag_set opt.long, v
       end
     end
   end
