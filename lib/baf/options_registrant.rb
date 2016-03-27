@@ -17,14 +17,6 @@ module Baf
       register_default_options
     end
 
-    def register_default_options
-      parser.separator ''
-      parser.separator 'options:'
-      parser.on_tail '-h', '--help', 'print this message' do
-        env.print parser
-      end
-    end
-
     def flag *args, **opts
       options << Option.new(*args, flag: true, **opts)
     end
@@ -48,6 +40,14 @@ module Baf
         instance_variable_get :"@#{name}"
       end
       env.instance_variable_set :"@#{name}", false
+    end
+
+    def register_default_options
+      parser.separator ''
+      parser.separator 'options:'
+      parser.on_tail '-h', '--help', 'print this message' do
+        env.print parser
+      end
     end
 
     def register_flag opt
