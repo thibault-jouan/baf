@@ -13,5 +13,5 @@ Feature: Built-in verbose option flag declaration
         end
       end.run(ARGV)
       """
-    When I run the program with option -v
+    When I successfully run the program with option -v
     Then the output must contain exactly "true\n"

@@ -9,5 +9,5 @@ Feature: Built-in version option flag declaration
         end
       end.run(ARGV)
       """
-    When I run the program with option -V
+    When I successfully run the program with option -V
     Then the output must contain exactly "0.13.42\n"

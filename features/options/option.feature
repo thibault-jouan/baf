@@ -13,7 +13,7 @@ Feature: Option declaration
         end
       end.run(ARGV)
       """
-    When I run the program with option -f bar
+    When I successfully run the program with option -f bar
     Then the output must contain exactly "bar\n"
 
   Scenario: converts `_' to `-' in long options
@@ -29,5 +29,5 @@ Feature: Option declaration
         end
       end.run(ARGV)
       """
-    When I run the program with option --foo-option bar
+    When I successfully run the program with option --foo-option bar
     Then the output must contain exactly "bar\n"

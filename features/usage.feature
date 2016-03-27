@@ -20,9 +20,8 @@ Feature: Program usage
       """
       Baf::CLI.run(ARGV)
       """
-    When I run the program with option -h
-    Then the exit status must be 0
-    And the output must contain exactly:
+    When I successfully run the program with option -h
+    Then the output must contain exactly:
       """
       Usage: baf [options]
 

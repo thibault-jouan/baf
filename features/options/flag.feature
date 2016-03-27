@@ -15,5 +15,5 @@ Feature: Option flag declaration
         end
       end.run(ARGV)
       """
-    When I run the program with option -f
+    When I successfully run the program with option -f
     Then the output must contain exactly "true\nfalse\n"
