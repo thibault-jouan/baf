@@ -1,3 +1,5 @@
+require 'baf/option'
+
 module Baf
   class OptionsRegistrant
     def initialize env, parser, options = []
