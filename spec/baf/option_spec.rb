@@ -3,7 +3,7 @@ require 'baf/option'
 module Baf
   RSpec.describe Option do
     let(:short)       { :f }
-    let(:long)        { 'foo' }
+    let(:long)        { :foo }
     let(:arg)         { 'VALUE' }
     let(:desc)        { 'set foo to VALUE' }
     subject(:option)  { described_class.new short, long, arg, desc }
@@ -12,7 +12,7 @@ module Baf
       it 'assigns given arguments' do
         expect(option).to have_attributes(
           short:  :f,
-          long:   'foo',
+          long:   :foo,
           arg:    'VALUE',
           desc:   'set foo to VALUE'
         )
@@ -21,12 +21,12 @@ module Baf
       context 'when given short and long' do
         subject(:option) { described_class.new short, long }
 
-        it { is_expected.to have_attributes short: :f, long: 'foo' }
+        it { is_expected.to have_attributes short: :f, long: :foo }
       end
 
       context 'when given short, long, arg and desc' do
         it do
-          is_expected.to have_attributes short: :f, long: 'foo',
+          is_expected.to have_attributes short: :f, long: :foo,
             arg: 'VALUE', desc: 'set foo to VALUE'
         end
       end
@@ -37,7 +37,7 @@ module Baf
         end
 
         it do
-          is_expected.to have_attributes short: :f, long: 'foo',
+          is_expected.to have_attributes short: :f, long: :foo,
             desc: 'set foo to VALUE'
         end
 
