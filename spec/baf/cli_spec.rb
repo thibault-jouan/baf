@@ -114,8 +114,8 @@ module Baf
         described_class.new env, arguments, registrant: registrant
       end
 
-      it 'tells the registrant to register -d --debug flag' do
-        expect(registrant).to receive(:flag).with :d, 'debug'
+      it 'tells the registrant to register -d (debug) flag' do
+        expect(registrant).to receive(:flag).with :d, :debug
         cli.flag_debug
       end
     end
@@ -125,8 +125,8 @@ module Baf
         described_class.new env, arguments, registrant: registrant
       end
 
-      it 'tells the registrant to register -v --verbose flag' do
-        expect(registrant).to receive(:flag).with :v, 'verbose'
+      it 'tells the registrant to register -v (verbose) flag' do
+        expect(registrant).to receive(:flag).with :v, :verbose
         cli.flag_verbose
       end
     end
@@ -140,7 +140,7 @@ module Baf
         aggregate_failures 'flag arguments' do
           expect(registrant).to receive :flag do |short, long, desc, block, opts|
             expect(short).to eq :V
-            expect(long).to eq 'version'
+            expect(long).to eq :version
             expect(desc).to eq 'print version'
             block.call env
             expect(opts).to include tail: true

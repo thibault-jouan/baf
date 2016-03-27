@@ -46,15 +46,15 @@ module Baf
     end
 
     def flag_debug
-      flag :d, 'debug'
+      flag :d, :debug
     end
 
     def flag_verbose
-      flag :v, 'verbose'
+      flag :v, :verbose
     end
 
     def flag_version version
-      flag :V, 'version', 'print version', -> env { env.puts version },
+      flag :V, :version, 'print version', -> env { env.puts version },
         tail: true
     end
 
