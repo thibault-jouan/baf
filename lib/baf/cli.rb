@@ -35,8 +35,7 @@ module Baf
       @parser     = opts[:parser]     || OptionParser.new
       @registrant = opts[:registrant] || OptionsRegistrant.new(env, parser)
 
-      registrant.register_default_options
-      setup
+      registrant.register { setup }
     end
 
     def setup

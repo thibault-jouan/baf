@@ -1,10 +1,20 @@
 module Baf
   class Option
-    attr_accessor :short, :long, :arg, :desc, :block
+    attr_accessor :short, :long, :arg, :desc, :block, :flag, :tail
 
-    def initialize *args
+    def initialize *args, flag: false, tail: false
       attrs = args.size > 1 ? build_attrs(*args) : args[0]
       attrs.each { |k, v| send :"#{k}=", v }
+      self.flag = flag
+      self.tail = tail
+    end
+
+    def flag?
+      !!flag
+    end
+
+    def tail?
+      !!tail
     end
 
     def to_parser_arguments
