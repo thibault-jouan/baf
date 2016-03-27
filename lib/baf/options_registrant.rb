@@ -2,6 +2,8 @@ require 'baf/option'
 
 module Baf
   class OptionsRegistrant
+    SUMMARY_HEADER = "\noptions:".freeze
+
     def initialize env, parser, options = []
       @env      = env
       @parser   = parser
@@ -18,6 +20,7 @@ module Baf
 
     def register
       yield if block_given?
+      parser.separator SUMMARY_HEADER
       options.each do |opt|
         if opt.flag? then register_flag opt else register_option opt end
       end
@@ -50,8 +53,7 @@ module Baf
     end
 
     def register_default_options
-      parser.separator ''
-      parser.separator 'options:'
+      parser.separator '' if options.any?
       parser.on_tail '-h', '--help', 'print this message' do
         env.print parser
       end

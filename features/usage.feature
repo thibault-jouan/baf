@@ -28,3 +28,23 @@ Feature: Program usage
       options:
           -h, --help                       print this message
       """
+
+  Scenario: separates user-defined options and default options with an empty line
+    Given the following baf program:
+      """
+      Class.new(Baf::CLI) do
+        def setup
+          flag_verbose
+        end
+      end.run(ARGV)
+      """
+    When I successfully run the program with option -h
+    Then the output must contain exactly:
+      """
+      Usage: baf [options]
+
+      options:
+          -v, --verbose                    enable verbose mode
+
+          -h, --help                       print this message
+      """
