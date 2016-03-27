@@ -11,10 +11,13 @@ module Baf
     subject(:registrant)  { OptionsRegistrant.new env, parser, options }
 
     describe '#flag' do
-      it 'adds a new option' do
-        expect { registrant.flag :v, :verbose }
-          .to change { options.size }
-          .by 1
+      it 'adds a new option flag' do
+        aggregate_failures 'option flag' do
+          expect { registrant.flag :v, :verbose }
+            .to change { options.size }
+            .by 1
+          expect(options).to include a_kind_of Flag
+        end
       end
     end
 

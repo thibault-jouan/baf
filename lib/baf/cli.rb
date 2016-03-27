@@ -2,6 +2,7 @@ require 'optparse'
 
 require 'baf'
 require 'baf/env'
+require 'baf/flag'
 require 'baf/option'
 require 'baf/options_registrant'
 

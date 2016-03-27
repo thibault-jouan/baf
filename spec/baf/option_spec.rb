@@ -1,4 +1,5 @@
 require 'baf/option'
+require 'shared/option'
 
 module Baf
   RSpec.describe Option do
@@ -8,120 +9,29 @@ module Baf
     let(:desc)        { 'set foo to VALUE' }
     subject(:option)  { described_class.new short, long, arg, desc }
 
-    describe '#initialize' do
-      it 'assigns given arguments' do
-        expect(option).to have_attributes(
-          short:  :f,
-          long:   :foo,
-          arg:    'VALUE',
-          desc:   'set foo to VALUE'
-        )
-      end
+    include_examples 'option'
 
-      context 'when given short and long' do
-        subject(:option) { described_class.new short, long }
-
-        it { is_expected.to have_attributes short: :f, long: :foo }
-      end
-
-      context 'when given short, long, arg and desc' do
-        it do
-          is_expected.to have_attributes short: :f, long: :foo,
-            arg: 'VALUE', desc: 'set foo to VALUE'
-        end
-      end
-
-      context 'when given short, long, desc and block' do
-        subject :option do
-          described_class.new short, long, desc, -> { :some_block }
-        end
-
-        it do
-          is_expected.to have_attributes short: :f, long: :foo,
-            desc: 'set foo to VALUE'
-        end
-
-        it 'assigns the block' do
-          expect(option.block.call).to eq :some_block
-        end
-      end
-
-      context 'when given flag option' do
-        subject(:option) { described_class.new short, long, flag: true }
-
-        it { is_expected.to be_flag }
-      end
-
-      context 'when given tail option' do
-        subject(:option) { described_class.new short, long, tail: true }
-
-        it { is_expected.to be_tail }
-      end
-    end
-
-    describe '#block?' do
-      it 'returns false when no block is assigned' do
-        option.block = nil
-        expect(option.block?).to be false
-      end
-
-      it 'returns true when no block is assigned' do
-        option.block = -> {}
-        expect(option.block?).to be true
-      end
-    end
-
-    describe '#flag?' do
-      it 'returns false when option is not a flag' do
-        expect(option.flag?).to be false
-      end
-
-      it 'returns true when option is a flag' do
-        option.flag = true
-        expect(option.flag?).to be true
-      end
-    end
-
-    describe '#tail?' do
-      it 'returns false when option is not at tail' do
-        expect(option.tail?).to be false
-      end
-
-      it 'returns true when option is at tail' do
-        option.tail = true
-        expect(option.tail?).to be true
-      end
+    describe '#env_definition' do
+      specify { expect(option.env_definition).to eq :accessor }
     end
 
     describe '#to_parser_arguments' do
-      it 'returns suitable arguments for an OptionParser option' do
-        expect(option.to_parser_arguments).to match [
-          a_string_including(?f),
-          a_string_including('foo'),
-          a_string_including('foo')
-        ]
+      let(:env) { double 'env' }
+
+      context 'when a block is assigned' do
+        let(:block) { -> arg { arg } }
+
+        it 'returns a block calling assigned block with the env' do
+          option.block = block
+          expect(option.to_parser_arguments(env)[4].call).to eq env
+        end
       end
 
-      it 'prepends `-\' to the short option' do
-        expect(option.to_parser_arguments[0]).to eq '-f'
-      end
-
-      it 'prepends `--\' to the long option' do
-        expect(option.to_parser_arguments[1]).to start_with '--foo'
-      end
-
-      it 'appends the long option argument after a space' do
-        expect(option.to_parser_arguments[1]).to end_with 'foo VALUE'
-      end
-
-      it 'converts `_\' to `-\' in long option' do
-        option.long = :foo_option
-        expect(option.to_parser_arguments[1]).to match /foo-option/
-      end
-
-      it 'does not append a trailing space when arg is nil' do
-        option.arg = nil
-        expect(option.to_parser_arguments[1]).to end_with 'foo'
+      context 'when no block is assigned' do
+        it 'returns a block assigning given value to related env accessor' do
+          expect(env).to receive(:foo=).with :bar
+          option.to_parser_arguments(env)[4].call :bar
+        end
       end
     end
   end
