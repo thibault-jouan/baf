@@ -17,7 +17,7 @@ module Baf
     def register
       yield if block_given?
       options.each do |opt|
-        case opt.flag
+        case opt.flag?
           when true   then register_flag opt
           when false  then register_option opt
         end
