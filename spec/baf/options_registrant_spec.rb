@@ -1,5 +1,6 @@
+require 'optparse'
+
 require 'baf/env'
-require 'baf/option'
 require 'baf/options_registrant'
 
 module Baf
