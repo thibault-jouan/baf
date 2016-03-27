@@ -6,6 +6,14 @@ module Baf
       @options  = options
     end
 
+    def flag *args, **opts
+      options << Option.new(*args, flag: true, **opts)
+    end
+
+    def option *args
+      options << Option.new(*args)
+    end
+
     def register
       yield if block_given?
       options.each do |opt|
@@ -15,14 +23,6 @@ module Baf
         end
       end
       register_default_options
-    end
-
-    def flag *args, **opts
-      options << Option.new(*args, flag: true, **opts)
-    end
-
-    def option *args
-      options << Option.new(*args)
     end
 
   protected
