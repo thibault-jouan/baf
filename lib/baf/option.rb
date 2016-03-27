@@ -1,28 +1,29 @@
 module Baf
   class Option
-    attr_accessor :short, :long, :arg, :desc, :block, :flag, :tail
+    attr_accessor :short, :long, :arg, :desc, :block, :tail
 
-    def initialize *args, flag: false, tail: false
+    def initialize *args, tail: false
       attrs = args.size > 1 ? build_attrs(*args) : args[0]
       attrs.each { |k, v| send :"#{k}=", v }
-      self.flag = flag
       self.tail = tail
+    end
+
+    def env_definition
+      :accessor
     end
 
     def block?
       !!block
     end
 
-    def flag?
-      !!flag
-    end
-
     def tail?
       !!tail
     end
 
-    def to_parser_arguments
-      ["-#{short}", parser_argument_long, desc]
+    def to_parser_arguments env
+      message = tail? ? :on_tail : :on
+      mblock  = block ? -> * { block[env] } : parser_argument_block(env)
+      [message, "-#{short}", parser_argument_long, parser_argument_desc, mblock]
     end
 
   protected
@@ -52,6 +53,14 @@ module Baf
         '--' + long.to_s.tr(?_, ?-),
         arg
       ].compact.join ' '
+    end
+
+    def parser_argument_desc
+      desc
+    end
+
+    def parser_argument_block env
+      -> v { env.send :"#{long}=", v }
     end
   end
 end

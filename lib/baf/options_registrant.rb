@@ -1,3 +1,4 @@
+require 'baf/flag'
 require 'baf/option'
 
 module Baf
@@ -11,7 +12,7 @@ module Baf
     end
 
     def flag *args, **opts
-      options << Option.new(*args, flag: true, **opts)
+      options << Flag.new(*args, **opts)
     end
 
     def option *args
@@ -22,7 +23,9 @@ module Baf
       yield if block_given?
       parser.separator SUMMARY_HEADER
       options.each do |opt|
-        if opt.flag? then register_flag opt else register_option opt end
+        send :"define_env_#{opt.env_definition}", env, opt.long unless opt.block?
+        *args, block = opt.to_parser_arguments env
+        parser.send *args, &block
       end
       register_default_options
     end
@@ -35,7 +38,7 @@ module Baf
       (class << env; self end).send :attr_accessor, name
     end
 
-    def define_env_flag env, name
+    def define_env_predicate env, name
       define_env_accessor env, name
       env.send :"#{name}=", false
       env.define_singleton_method :"#{name}?" do
@@ -44,40 +47,10 @@ module Baf
       env.instance_variable_set :"@#{name}", false
     end
 
-    def env_flag! name
-      env_flag_set name, true
-    end
-
-    def env_flag_set name, value
-      env.send :"#{name}=", value
-    end
-
     def register_default_options
       parser.separator '' if options.any?
       parser.on_tail '-h', '--help', 'print this message' do
         env.print parser
-      end
-    end
-
-    def register_flag opt
-      position = opt.tail ? :on_tail : :on
-      if opt.block?
-        parser.send position, *opt.to_parser_arguments do
-          opt.block[env]
-        end
-      else
-        define_env_flag env, opt.long
-        parser.send position,
-            "-#{opt.short}", "--#{opt.long}", "enable #{opt.long} mode" do
-          env_flag! opt.long
-        end
-      end
-    end
-
-    def register_option opt
-      define_env_accessor env, opt.long
-      parser.on *opt.to_parser_arguments do |v|
-        self.env_flag_set opt.long, v
       end
     end
   end
