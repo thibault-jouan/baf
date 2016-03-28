@@ -94,6 +94,11 @@ module Baf
           registrant.register env, parser
           expect(parser.help).to match /bar.+foo/m
         end
+
+        it 'registers the option after default ones' do
+          registrant.register env, parser
+          expect(parser.help).to match /help.+foo/m
+        end
       end
 
       context 'when an option is declared' do
