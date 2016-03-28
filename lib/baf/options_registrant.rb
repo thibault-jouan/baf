@@ -25,12 +25,10 @@ module Baf
     def register env, parser
       yield if block_given?
       parser.separator SUMMARY_HEADER
-      options.each do |opt|
-        send :"define_env_#{opt.env_definition}", env, opt.long unless opt.block?
-        *args, block = opt.to_parser_arguments env
-        parser.send *args, &block
-      end
+      options_tail, options_standard = options.partition &:tail?
+      options_standard.each { |opt|register_option env, parser, opt }
       register_default_options env, parser
+      options_tail.each { |opt|register_option env, parser, opt }
     end
 
   private
@@ -55,6 +53,12 @@ module Baf
       parser.on_tail *HELP_PARSER_ARGS do
         env.print parser
       end
+    end
+
+    def register_option env, parser, opt
+      send :"define_env_#{opt.env_definition}", env, opt.long unless opt.block?
+      *args, block = opt.to_parser_arguments env
+      parser.send *args, &block
     end
   end
 end

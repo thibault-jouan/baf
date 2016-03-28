@@ -24,3 +24,4 @@ Feature: Built-in version option flag declaration
       """
     When I successfully run the program with option -h
     Then the output must match /verbose mode\n\n.*-V.+--version.+print version/m
+    And the output must match /--help.*--version/m
