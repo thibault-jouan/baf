@@ -35,7 +35,7 @@ module Baf
 
   private
 
-    attr_reader :env, :parser, :options
+    attr_reader :options
 
     def define_env_accessor env, name
       (class << env; self end).send :attr_accessor, name
