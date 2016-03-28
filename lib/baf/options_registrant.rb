@@ -10,10 +10,8 @@ module Baf
       print\ this\ message
     ].freeze.each &:freeze
 
-    def initialize env, parser, options = []
-      @env      = env
-      @parser   = parser
-      @options  = options
+    def initialize options = []
+      @options = options
     end
 
     def flag *args, **opts
@@ -24,7 +22,7 @@ module Baf
       options << Option.new(*args)
     end
 
-    def register
+    def register env, parser
       yield if block_given?
       parser.separator SUMMARY_HEADER
       options.each do |opt|
@@ -32,7 +30,7 @@ module Baf
         *args, block = opt.to_parser_arguments env
         parser.send *args, &block
       end
-      register_default_options
+      register_default_options env, parser
     end
 
   private
@@ -52,7 +50,7 @@ module Baf
       env.instance_variable_set :"@#{name}", false
     end
 
-    def register_default_options
+    def register_default_options env, parser
       parser.separator '' if options.any?
       parser.on_tail *HELP_PARSER_ARGS do
         env.print parser

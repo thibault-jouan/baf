@@ -9,7 +9,7 @@ module Baf
     let(:env)         { Env.new(stdout) }
     let(:arguments)   { %w[foo bar] }
     let(:parser)      { OptionParser.new }
-    let(:registrant)  { OptionsRegistrant.new(env, parser) }
+    let(:registrant)  { OptionsRegistrant.new }
     subject(:cli)     { described_class.new env, arguments }
 
     describe '.run' do
@@ -69,20 +69,18 @@ module Baf
     end
 
     describe '#initialize' do
-      subject :cli do
-        described_class.new env, arguments, registrant: registrant
-      end
-
-      it 'tells the registrant to register default options' do
-        expect(registrant).to receive :register_default_options
-        cli
-      end
-
-      it 'sends the :setup message to itself' do
-        my_cli_class = Class.new(CLI) do
-          define_method(:setup) { throw :my_setup }
+      it 'tells the registrant to register with local declarations' do
+        my_cli_class = Class.new(described_class) do
+          define_method(:setup) { :options_declaration }
         end
-        expect { my_cli_class.new env, arguments }.to throw_symbol :my_setup
+        aggregate_failures do
+          expect(registrant).to receive :register do |env_, parser_, &block|
+            expect(env_).to eq env
+            expect(parser_).to eq parser
+            expect(block.call).to eq :options_declaration
+          end
+        end
+        my_cli_class.new env, arguments, parser: parser, registrant: registrant
       end
     end
 

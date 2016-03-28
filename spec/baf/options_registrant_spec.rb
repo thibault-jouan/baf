@@ -5,10 +5,8 @@ require 'baf/options_registrant'
 
 module Baf
   RSpec.describe OptionsRegistrant do
-    let(:env)             { Env.new(StringIO.new) }
-    let(:parser)          { OptionParser.new }
     let(:options)         { [] }
-    subject(:registrant)  { OptionsRegistrant.new env, parser, options }
+    subject(:registrant)  { OptionsRegistrant.new options }
 
     describe '#flag' do
       it 'adds a new option flag' do
@@ -30,25 +28,28 @@ module Baf
     end
 
     describe '#register' do
+      let(:env)     { Env.new(StringIO.new) }
+      let(:parser)  { OptionParser.new }
+
       it 'adds a header for options on the parser' do
-        registrant.register
+        registrant.register env, parser
         expect(parser.to_s).to match /\n^options:\n\s+-/
       end
 
       it 'adds help option on option parser tail' do
-        registrant.register
+        registrant.register env, parser
         expect(parser.to_s).to match /^\s+-h,\s+--help\s+print this message\n/
       end
 
       it 'yields the given block' do
-        expect { |b| registrant.register &b }
+        expect { |b| registrant.register env, parser, &b }
           .to yield_control
       end
 
       context 'when a flag is declared' do
         before do
           registrant.flag :v, :verbose
-          registrant.register
+          registrant.register env, parser
         end
 
         it 'defines an env accessor named after long option' do
@@ -72,7 +73,7 @@ module Baf
 
         before do
           registrant.flag :f, :foo, 'foo description', block
-          registrant.register
+          registrant.register env, parser
         end
 
         it 'does not define the predicate method' do
@@ -90,7 +91,7 @@ module Baf
 
         it 'appends the option on tail' do
           registrant.flag :b, :bar
-          registrant.register
+          registrant.register env, parser
           expect(parser.help).to match /bar.+foo/m
         end
       end
@@ -98,7 +99,7 @@ module Baf
       context 'when an option is declared' do
         before do
           registrant.option :f, :foo, 'VALUE', 'set foo to VALUE'
-          registrant.register
+          registrant.register env, parser
         end
 
         it 'defines an env accessor named after long option' do
