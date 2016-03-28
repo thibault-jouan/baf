@@ -10,7 +10,7 @@ module RSpec
       end
     end
 
-    class PositiveExpectationHandler
+    class NegativeExpectationHandler
       class << self
         def verb
           'must not'
