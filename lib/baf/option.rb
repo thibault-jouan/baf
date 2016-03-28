@@ -1,5 +1,12 @@
 module Baf
   class Option
+    LONG_PREFIX             = '--'.freeze
+    LONG_NORMALIZE_SEARCH   = ?_.freeze
+    LONG_NORMALIZE_REPLACE  = ?-.freeze
+    LONG_WITH_ARG_GLUE      = ' '.freeze
+    PARSER_MESSAGE          = :on
+    PARSER_MESSAGE_TAIL     = :on_tail
+
     attr_accessor :short, :long, :arg, :desc, :block, :tail
 
     def initialize *args, tail: false
@@ -21,7 +28,7 @@ module Baf
     end
 
     def to_parser_arguments env
-      message = tail? ? :on_tail : :on
+      message = tail? ? PARSER_MESSAGE_TAIL : PARSER_MESSAGE
       mblock  = block ? -> * { block[env] } : parser_argument_block(env)
       [message, "-#{short}", parser_argument_long, parser_argument_desc, mblock]
     end
@@ -50,9 +57,11 @@ module Baf
 
     def parser_argument_long
       [
-        '--' + long.to_s.tr(?_, ?-),
+        LONG_PREFIX + long
+          .to_s
+          .tr(LONG_NORMALIZE_SEARCH, LONG_NORMALIZE_REPLACE),
         arg
-      ].compact.join ' '
+      ].compact.join LONG_WITH_ARG_GLUE
     end
 
     def parser_argument_desc

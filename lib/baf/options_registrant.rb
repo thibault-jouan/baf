@@ -3,7 +3,12 @@ require 'baf/option'
 
 module Baf
   class OptionsRegistrant
-    SUMMARY_HEADER = "\noptions:".freeze
+    SUMMARY_HEADER    = "\noptions:".freeze
+    HELP_PARSER_ARGS  = %w[
+      -h
+      --help
+      print\ this\ message
+    ].freeze.each &:freeze
 
     def initialize env, parser, options = []
       @env      = env
@@ -49,7 +54,7 @@ module Baf
 
     def register_default_options
       parser.separator '' if options.any?
-      parser.on_tail '-h', '--help', 'print this message' do
+      parser.on_tail *HELP_PARSER_ARGS do
         env.print parser
       end
     end
