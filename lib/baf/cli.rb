@@ -15,7 +15,7 @@ module Baf
 
     class << self
       def run arguments, stdout: $stdout, stderr: $stderr
-        cli = new Env.new(stdout), arguments
+        cli = new env_class.new(stdout), arguments
         cli.parse_arguments!
         cli.run
       rescue ArgumentError => e
@@ -25,6 +25,14 @@ module Baf
         stderr.puts "#{e.class.name}: #{e}"
         stderr.puts e.backtrace.map { |l| '  %s' % l }
         exit EX_SOFTWARE
+      end
+
+    private
+
+      def env_class
+        return Env unless parent_name = name =~ /::[^:]+\Z/ ? $` : nil
+        parent = Object.const_get(parent_name)
+        parent.const_defined?(:Env) ? parent.const_get(:Env) : Env
       end
     end
 
