@@ -1,8 +1,10 @@
-sudo: false
+sudo: required
+dist: trusty
+
 language: ruby
 cache: bundler
 rvm:
-  - 2.3.0
+  - 2.3
   - ruby-head
   - 2.2
   - 2.1
