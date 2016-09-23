@@ -63,11 +63,12 @@ module Baf
     end
 
     def flag_version version
-      flag :V, :version, 'print version', -> env { env.puts version },
+      flag :V, :version, 'print version', -> *, env { env.puts version },
         tail: true
     end
 
     def option *args
+      args = [*args, Proc.new] if block_given?
       registrant.option *args
     end
 

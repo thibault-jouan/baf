@@ -29,13 +29,17 @@ module Baf
 
     def to_parser_arguments env
       message = tail? ? PARSER_MESSAGE_TAIL : PARSER_MESSAGE
-      mblock  = block ? -> * { block[env] } : parser_argument_block(env)
+      mblock = if block?
+        -> *args { block[*args, env] }
+      else
+        parser_argument_block env
+      end
       [message, "-#{short}", parser_argument_long, parser_argument_desc, mblock]
     end
 
   private
 
-    def build_attrs short, long, arg_or_desc = nil, desc_or_block = nil
+    def build_attrs short, long, arg_or_desc = nil, desc_or_block = nil, block = nil
       {
         short:  short,
         long:   long
@@ -47,8 +51,9 @@ module Baf
         }
       when String
         {
-          arg:  arg_or_desc,
-          desc: desc_or_block
+          arg:    arg_or_desc,
+          desc:   desc_or_block,
+          block:  block
         }
       else
         {}

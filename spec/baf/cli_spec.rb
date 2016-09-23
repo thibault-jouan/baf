@@ -140,7 +140,7 @@ module Baf
             expect(short).to eq :V
             expect(long).to eq :version
             expect(desc).to eq 'print version'
-            block.call env
+            block.call true, env
             expect(opts).to include tail: true
           end
           cli.flag_version '0.13.42'
@@ -159,6 +159,15 @@ module Baf
           .to receive(:option)
           .with :f, :foo, 'VALUE', 'set foo to VALUE'
         cli.option :f, :foo, 'VALUE', 'set foo to VALUE'
+      end
+
+      it 'accepts an optional block' do
+        expect(registrant).to receive :option do |*, block|
+          expect(block.call).to eq :foo_block
+        end
+        cli.option :f, :foo, 'VALUE', 'set foo to VALUE' do
+          :foo_block
+        end
       end
     end
 

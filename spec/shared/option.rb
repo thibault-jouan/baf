@@ -43,6 +43,21 @@ RSpec.shared_examples 'option' do
       end
     end
 
+    context 'when given short, long, arg, desc and block' do
+      subject :option do
+        described_class.new short, long, arg, desc, -> { :some_block }
+      end
+
+      it do
+        is_expected.to have_attributes short: :f, long: :foo,
+          arg: 'VALUE', desc: 'set foo to VALUE'
+      end
+
+      it 'assigns the block' do
+        expect(option.block.call).to eq :some_block
+      end
+    end
+
     context 'when given tail option' do
       subject { described_class.new short, long, tail: true }
 
@@ -115,6 +130,17 @@ RSpec.shared_examples 'option' do
 
     it 'returns the assigned description' do
       expect(option.to_parser_arguments(env)[3]).to eq 'set foo to VALUE'
+    end
+
+    context 'with an assigned block' do
+      before do
+        subject.block = -> *args { args }
+      end
+
+      it 'returns a block wrapping the given one with env as last arg' do
+        expect(subject.to_parser_arguments(env)[4].call :some_arg)
+          .to eq [:some_arg, env]
+      end
     end
   end
 end

@@ -16,6 +16,20 @@ Feature: Option declaration
     When I successfully run the program with option -f bar
     Then the output must contain exactly "bar\n"
 
+  Scenario: calls the given block with option value and env
+    Given the following baf program:
+      """
+      Class.new(Baf::CLI) do
+        def setup
+          option :f, :foo, 'VALUE', 'do something' do |foo, env|
+            env.puts "do something with #{foo}"
+          end
+        end
+      end.run(ARGV)
+      """
+    When I successfully run the program with option -f bar
+    Then the output must contain exactly "do something with bar\n"
+
   Scenario: converts `_' to `-' in long options
     Given the following baf program:
       """
