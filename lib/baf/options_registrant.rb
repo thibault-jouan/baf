@@ -26,9 +26,9 @@ module Baf
       yield if block_given?
       parser.separator SUMMARY_HEADER
       options_tail, options_standard = options.partition &:tail?
-      options_standard.each { |opt|register_option env, parser, opt }
+      options_standard.each { |opt| register_option env, parser, opt }
       register_default_options env, parser
-      options_tail.each { |opt|register_option env, parser, opt }
+      options_tail.each { |opt| register_option env, parser, opt }
     end
 
   private
