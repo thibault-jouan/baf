@@ -1,8 +1,12 @@
-def program_run check: false, opts: nil, args: nil
+def program_run check: false, opts: nil, args: nil, wait: true
   cmd = [*@_baf_program ||= %w[ruby baf]]
   cmd << opts if opts
   cmd << args.split(' ') if args
-  run_simple cmd.join(' '), fail_on_error: false
+  if wait
+    run_simple cmd.join(' '), fail_on_error: false
+  else
+    run cmd.join ' '
+  end
   program_run_check if check
 end
 
@@ -20,16 +24,16 @@ rescue RSpec::Expectations::ExpectationNotMetError => e
 end
 
 
-When /^I( successfully)? run the program$/ do |check|
-  program_run check: !!check
+When /^I( successfully)? (run|\w+) the program$/ do |check, run|
+  program_run check: !!check, wait: run == 'run'
 end
 
-When /^I( successfully)? run the program with arguments (.+)$/ do |check, args|
-  program_run check: !!check, args: args
+When /^I( successfully)? (run|\w+) the program with arguments (.+)$/ do |check, run, args|
+  program_run check: !!check, args: args, wait: run == 'run'
 end
 
-When /^I( successfully)? run the program with options? (-.+)$/ do |check, opts|
-  program_run check: !!check, opts: opts
+When /^I( successfully)? (run|\w+) the program with options? (-.+)$/ do |check, run, opts|
+  program_run check: !!check, opts: opts, wait: run == 'run'
 end
 
 
