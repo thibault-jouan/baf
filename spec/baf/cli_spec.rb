@@ -56,7 +56,7 @@ module Baf
         end
 
         it 'exits with a return status of 70' do
-          expect { run }.to raise_error(SystemExit) do |e|
+          expect { run }.to raise_error SystemExit do |e|
             expect(e.status).to eq 70
           end
         end
