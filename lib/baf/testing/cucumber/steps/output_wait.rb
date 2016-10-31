@@ -13,14 +13,17 @@ module Baf
   end
 end
 
-def wait_output! content
+def wait_output! pattern
   output = -> { last_command_started.output }
   wait_until do
-    output.call.include? content
+    case pattern
+    when Regexp then output.call =~ pattern
+    when String then output.call.include? pattern
+    end
   end
 rescue Baf::Testing::WaitError => e
   fail <<-eoh
-expected `#{content}' not seen after #{e.timeout} seconds in:
+expected `#{pattern}' not seen after #{e.timeout} seconds in:
   ```\n#{output.call.lines.map { |l| "  #{l}" }.join}  ```
   eoh
 end
@@ -37,6 +40,10 @@ rescue Timeout::Error
   raise Baf::Testing::WaitError.new(message % timeout, timeout)
 end
 
+
+Then /^the output will match \/([^\/]+)\/([a-z]*)$/ do |pattern, options|
+  wait_output! build_regexp(pattern, options)
+end
 
 Then /^the output will contain "([^"]+)"$/ do |content|
   wait_output! content
