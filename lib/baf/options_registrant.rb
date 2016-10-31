@@ -52,6 +52,7 @@ module Baf
       parser.separator '' if options.any?
       parser.on_tail *HELP_PARSER_ARGS do
         env.print parser
+        exit
       end
     end
 

@@ -25,3 +25,19 @@ Feature: Built-in version option flag declaration
     When I successfully run the program with option -h
     Then the output must match /verbose mode\n\n.*-V.+--version.+print version/m
     And the output must match /--help.*--version/m
+
+  Scenario: prevents running the program when -V option is given
+    Given the following baf program:
+      """
+      Class.new(Baf::CLI) do
+        def setup
+          flag_version '0.13.42'
+        end
+
+        def run
+          fail
+        end
+      end.run(ARGV)
+      """
+    When I run the program with option -V
+    Then the exit status must be 0

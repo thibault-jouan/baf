@@ -29,6 +29,18 @@ Feature: Program usage
           -h, --help                       print this message
       """
 
+  Scenario: prevents running the program when -h option is given
+    Given the following baf program:
+      """
+      Class.new(Baf::CLI) do
+        def run
+          fail
+        end
+      end.run(ARGV)
+      """
+    When I run the program with option -h
+    Then the exit status must be 0
+
   Scenario: separates user-defined options and default options with an empty line
     Given the following baf program:
       """
