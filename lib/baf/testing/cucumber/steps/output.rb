@@ -13,6 +13,10 @@ def expect_output content
 end
 
 
+Then /^the output must contain "([^"]+)"$/ do |content|
+  expect(last_command_started.output).to include unescape_text content
+end
+
 Then /^the output must contain exactly:$/ do |content|
   expect_output content + $/
 end
