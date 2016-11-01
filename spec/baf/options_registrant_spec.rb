@@ -5,6 +5,8 @@ require 'baf/options_registrant'
 
 module Baf
   RSpec.describe OptionsRegistrant do
+    include ExitHelpers
+
     let(:options)         { [] }
     subject(:registrant)  { OptionsRegistrant.new options }
 
@@ -28,17 +30,13 @@ module Baf
     end
 
     describe '#register' do
-      let(:env)     { Env.new(StringIO.new) }
+      let(:output)  { StringIO.new }
+      let(:env)     { Env.new(output) }
       let(:parser)  { OptionParser.new }
 
       it 'adds a header for options on the parser' do
         registrant.register env, parser
         expect(parser.to_s).to match /\n^options:\n\s+-/
-      end
-
-      it 'adds help option on option parser tail' do
-        registrant.register env, parser
-        expect(parser.to_s).to match /^\s+-h,\s+--help\s+print this message\n/
       end
 
       it 'yields the given block' do
@@ -115,6 +113,27 @@ module Baf
         it 'adds an option handler to the parser' do
           parser.parse! %w[-f bar]
           expect(env.foo).to eq 'bar'
+        end
+      end
+
+      context 'built-in help' do
+        it 'adds help option on option parser tail' do
+          registrant.register env, parser
+          expect(parser.to_s)
+            .to match /^\s+-h,\s+--help\s+print this message\n/
+        end
+
+        it 'adds an help option handler printing usage on env output' do
+          registrant.register env, parser
+          trap_exit { parser.parse! %w[-h] }
+          expect(output.string).to start_with 'Usage: '
+        end
+
+        it 'exits with a return status of 0' do
+          registrant.register env, parser
+          expect { parser.parse! %w[-h] }.to raise_error SystemExit do |e|
+            expect(e.status).to eq 0
+          end
         end
       end
     end

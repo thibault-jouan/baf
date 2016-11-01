@@ -130,6 +130,7 @@ module Baf
     end
 
     describe '#flag_version' do
+      let(:arguments) { %w[--version] }
       subject :cli do
         described_class.new env, arguments, registrant: registrant
       end
@@ -140,12 +141,21 @@ module Baf
             expect(short).to eq :V
             expect(long).to eq :version
             expect(desc).to eq 'print version'
-            block.call true, env
             expect(opts).to include tail: true
+            block.call true, env
           end
-          cli.flag_version '0.13.42'
+          trap_exit { cli.flag_version '0.13.42' }
           expect(stdout.string).to include '0.13.42'
         end
+      end
+
+      it 'exits in the given option block' do
+        expect(registrant).to receive :flag do |*, block, _|
+          expect { block.call true, env }.to raise_error SystemExit do |e|
+            expect(e.status).to eq 0
+          end
+        end
+        cli.flag_version '0.13.42'
       end
     end
 
