@@ -30,7 +30,9 @@ expected `#{pattern}' not seen after #{e.timeout} seconds in:
 end
 
 def wait_until message: 'condition not met after %d seconds'
-  timeout = 2
+  timeout = ENV.key?('BAF_TEST_TIMEOUT') ?
+    ENV['BAF_TEST_TIMEOUT'].to_i :
+    2
   Timeout.timeout(timeout) do
     loop do
       break if yield
