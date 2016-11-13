@@ -8,7 +8,7 @@ module Baf
     include ExitHelpers
 
     let(:options)         { [] }
-    subject(:registrant)  { OptionsRegistrant.new options }
+    subject(:registrant)  { described_class.new options }
 
     describe '#flag' do
       it 'adds a new option flag' do
