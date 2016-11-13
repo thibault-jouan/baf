@@ -13,14 +13,15 @@ module Baf
   end
 end
 
-def wait_output! pattern
+def wait_output! pattern, times: 1, results: nil
   output = -> { last_command_started.output }
   wait_until do
     case pattern
-    when Regexp then output.call =~ pattern
+    when Regexp then (results = output.call.scan(pattern)).size >= times
     when String then output.call.include? pattern
     end
   end
+  results
 rescue Baf::Testing::WaitError => e
   fail <<-eoh
 expected `#{pattern}' not seen after #{e.timeout} seconds in:
@@ -29,7 +30,9 @@ expected `#{pattern}' not seen after #{e.timeout} seconds in:
 end
 
 def wait_until message: 'condition not met after %d seconds'
-  timeout = 2
+  timeout = ENV.key?('BAF_TEST_TIMEOUT') ?
+    ENV['BAF_TEST_TIMEOUT'].to_i :
+    2
   Timeout.timeout(timeout) do
     loop do
       break if yield
