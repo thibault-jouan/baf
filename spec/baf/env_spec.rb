@@ -3,7 +3,7 @@ require 'baf/env'
 module Baf
   RSpec.describe Env do
     let(:output)  { StringIO.new }
-    subject(:env) { described_class.new output }
+    subject(:env) { described_class.new output: output }
 
     describe '#print' do
       it 'prints given argument to the output' do

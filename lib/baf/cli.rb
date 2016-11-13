@@ -15,7 +15,7 @@ module Baf
 
     class << self
       def run arguments, stdout: $stdout, stderr: $stderr
-        cli = new env_class.new(stdout), arguments
+        cli = new env_class.new(output: $stdout), arguments
         cli.parse_arguments!
         cli.run
       rescue ArgumentError => e
