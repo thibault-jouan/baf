@@ -6,7 +6,7 @@ module Baf
 
     let(:stdout)      { StringIO.new }
     let(:stderr)      { StringIO.new }
-    let(:env)         { Env.new(stdout) }
+    let(:env)         { Env.new(output: stdout) }
     let(:arguments)   { %w[foo bar] }
     let(:parser)      { OptionParser.new }
     let(:registrant)  { OptionsRegistrant.new }

@@ -5,8 +5,8 @@ Feature: Env class customization
       """
       module TestEnvCustom
         class Env < Baf::Env
-          def initialize stdout
-            stdout.puts 'using custom env'
+          def initialize output:
+            output.puts 'using custom env'
             super
           end
         end

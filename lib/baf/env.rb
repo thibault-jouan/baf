@@ -5,7 +5,7 @@ module Baf
     extend Forwardable
     def_delegators :@output, :print, :puts
 
-    def initialize output
+    def initialize output: $stdout
       @output = output
     end
   end

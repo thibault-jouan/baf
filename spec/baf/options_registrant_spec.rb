@@ -31,7 +31,7 @@ module Baf
 
     describe '#register' do
       let(:output)  { StringIO.new }
-      let(:env)     { Env.new(output) }
+      let(:env)     { Env.new(output: output) }
       let(:parser)  { OptionParser.new }
 
       it 'adds a header for options on the parser' do
