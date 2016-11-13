@@ -48,6 +48,10 @@ Then /^the output will match \/([^\/]+)\/([a-z]*)$/ do |pattern, options|
   wait_output! build_regexp(pattern, options)
 end
 
+Then /^the output will contain:$/ do |content|
+  wait_output! content + $/
+end
+
 Then /^the output will contain "([^"]+)"$/ do |content|
   wait_output! content
 end
