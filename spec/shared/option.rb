@@ -21,6 +21,14 @@ RSpec.shared_examples 'option' do
       it { is_expected.to have_attributes short: :f, long: :foo }
     end
 
+    context 'when given short, lang and desc' do
+      subject(:option) { described_class.new short, long, desc }
+
+      it do is_expected.to have_attributes short: :f, long: :foo,
+          desc: 'set foo to VALUE'
+      end
+    end
+
     context 'when given short, long, arg and desc' do
       it do
         is_expected.to have_attributes short: :f, long: :foo,
