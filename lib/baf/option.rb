@@ -42,7 +42,8 @@ module Baf
     def build_attrs short, long, arg_or_desc = nil, desc_or_block = nil, block = nil
       {
         short:  short,
-        long:   long
+        long:   long,
+        desc:   arg_or_desc
       }.merge case desc_or_block
       when Proc
         {

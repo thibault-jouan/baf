@@ -29,3 +29,15 @@ Feature: Option flag declaration
       """
     When I successfully run the program with option -h
     Then the output must match /-f.+--foo.+enable foo mode/
+
+  Scenario: declares a flag with a custom description
+    Given the following baf program:
+      """
+      Class.new(Baf::CLI) do
+        def setup
+          flag :f, :foo, 'use the foo!'
+        end
+      end.run(ARGV)
+      """
+    When I successfully run the program with option -h
+    Then the output must match /-f.+--foo.+use the foo!/
