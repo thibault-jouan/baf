@@ -1,2 +1,3 @@
 default: --require features/support --require features/steps --no-source
+guard: --format pretty --quiet
 quiet: --format progress
