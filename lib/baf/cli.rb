@@ -14,8 +14,8 @@ module Baf
     EX_SOFTWARE = 70
 
     class << self
-      def run arguments, stdout: $stdout, stderr: $stderr
-        cli = new env_class.new(output: stdout), arguments
+      def run arguments, stdin: $stdin, stdout: $stdout, stderr: $stderr
+        cli = new env_class.new(input: stdin, output: stdout), arguments
         cli.parse_arguments!
         cli.run
       rescue ArgumentError => e
