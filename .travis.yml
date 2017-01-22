@@ -1,6 +1,10 @@
 sudo: required
 dist: trusty
 language: c
+addons:
+  apt:
+    packages:
+      - realpath
 notifications:
   email:
     - tj+travis_baf@a13.fr
@@ -31,7 +35,7 @@ install:
   - export GEM_HOME=~/.gem/travis
   - export PATH=$GEM_HOME/bin:$HOME/usr/bin:/bin:/usr/bin
   - cd $TRAVIS_BUILD_DIR
-  - gem install bundler
-  - bundle
+  - gem install -g
 script:
-  - bundle exec rake
+  - export RUBYOPT=-I$(realpath lib)
+  - rake
