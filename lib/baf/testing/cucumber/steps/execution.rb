@@ -28,8 +28,12 @@ When /^I( successfully)? (run|\w+) the program$/ do |check, run|
   program_run check: !!check, wait: run == 'run'
 end
 
-When /^I( successfully)? (run|\w+) the program with arguments (.+)$/ do |check, run, args|
+When /^I( successfully)? (run|\w+) the program with arguments? (.+)$/ do |check, run, args|
   program_run check: !!check, args: args, wait: run == 'run'
+end
+
+When /^I( successfully)? (run|\w+) the program with command (.+)$/ do |check, run, cmd|
+  program_run check: !!check, args: cmd, wait: run == 'run'
 end
 
 When /^I( successfully)? (run|\w+) the program with options? (-.+)$/ do |check, run, opts|
