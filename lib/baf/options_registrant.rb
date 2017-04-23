@@ -10,6 +10,8 @@ module Baf
       print\ this\ message
     ].freeze.each &:freeze
 
+    attr_writer :banner
+
     def initialize options = []
       @options = options
     end
@@ -24,6 +26,7 @@ module Baf
 
     def register env, parser
       yield if block_given?
+      parser.banner = banner if banner
       parser.separator SUMMARY_HEADER
       options_tail, options_standard = options.partition &:tail?
       options_standard.each { |opt| register_option env, parser, opt }
@@ -33,7 +36,7 @@ module Baf
 
   private
 
-    attr_reader :options
+    attr_reader :banner, :options
 
     def define_env_accessor env, name
       (class << env; self end).send :attr_accessor, name

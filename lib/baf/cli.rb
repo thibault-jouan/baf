@@ -50,6 +50,10 @@ module Baf
     def setup
     end
 
+    def banner arg
+      registrant.banner = arg
+    end
+
     def flag *args
       registrant.flag *args
     end

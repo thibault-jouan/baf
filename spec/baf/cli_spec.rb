@@ -96,6 +96,17 @@ module Baf
       end
     end
 
+    describe '#banner' do
+      subject :cli do
+        described_class.new env, arguments, registrant: registrant
+      end
+
+      it 'tells the registrant to set given banner' do
+        expect(registrant).to receive(:banner=).with 'some usage string'
+        cli.banner 'some usage string'
+      end
+    end
+
     describe '#flag' do
       subject :cli do
         described_class.new env, arguments, registrant: registrant

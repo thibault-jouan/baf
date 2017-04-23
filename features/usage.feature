@@ -60,3 +60,18 @@ Feature: Program usage
 
           -h, --help                       print this message
       """
+
+  Scenario: supports setting a custom usage banner
+    Given the following baf program:
+      """
+      Class.new(Baf::CLI) do
+        def setup
+          banner 'my_program [options] arguments...'
+        end
+      end.run(ARGV)
+      """
+    When I successfully run the program with option -h
+    Then the output must contain:
+      """
+      my_program [options] arguments...
+      """
