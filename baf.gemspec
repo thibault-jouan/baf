@@ -13,6 +13,6 @@ Gem::Specification.new do |s|
 
   s.files       = `git ls-files lib`.split $/
 
-  s.add_development_dependency 'baf-testing', '~> 0.0'
-  s.add_development_dependency 'rake',        '~> 10.4'
+  s.add_development_dependency 'baf-testing'
+  s.add_development_dependency 'rake'
 end
