@@ -34,6 +34,12 @@ module Baf
       let(:env)     { Env.new(output: output) }
       let(:parser)  { OptionParser.new }
 
+      it 'sets the assigned usage banner' do
+        registrant.banner = 'Usage: my_program arguments...'
+        registrant.register env, parser
+        expect(parser.to_s).to match /\AUsage: my_program arguments\.\.\.\n/
+      end
+
       it 'adds a header for options on the parser' do
         registrant.register env, parser
         expect(parser.to_s).to match /\n^options:\n\s+-/
