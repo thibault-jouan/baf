@@ -82,6 +82,10 @@ module Baf
       raise ArgumentError, parser
     end
 
+    def usage!
+      fail ArgumentError, parser
+    end
+
     def run
     end
 

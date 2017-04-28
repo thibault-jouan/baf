@@ -29,6 +29,25 @@ Feature: Program usage
           -h, --help                       print this message
       """
 
+  Scenario: reports error and prints the usage when using `usage!'
+    Given the following baf program:
+      """
+      Class.new(Baf::CLI) do
+        def run
+          usage!
+        end
+      end.run(ARGV)
+      """
+    When I run the program
+    Then the exit status must be 64
+    And the output must contain exactly:
+      """
+      Usage: baf [options]
+
+      options:
+          -h, --help                       print this message
+      """
+
   Scenario: prevents running the program when -h option is given
     Given the following baf program:
       """

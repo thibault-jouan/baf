@@ -209,5 +209,12 @@ module Baf
         end
       end
     end
+
+    describe '#usage!' do
+      it 'raises a CLI::ArgumentError with the usage as message' do
+        expect { cli.usage! }
+          .to raise_error CLI::ArgumentError, /\AUsage: /
+      end
+    end
   end
 end
