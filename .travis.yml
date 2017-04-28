@@ -30,12 +30,13 @@ before_install:
   - test -x $RB || cd ruby-*
   - test -x $RB || ./configure --prefix=$HOME/usr --disable-install-doc --with-out-ext=tk
   - test -x $RB || (make && make install)
+  - echo "source 'https://rubygems.org'; gemspec" > ~/spec_deps.rb
 install:
   - unset gem GEM_HOME GEM_PATH RUBYOPT
   - export GEM_HOME=~/.gem/travis
   - export PATH=$GEM_HOME/bin:$HOME/usr/bin:/bin:/usr/bin
   - cd $TRAVIS_BUILD_DIR
-  - gem install -g
+  - gem install -g ~/spec_deps.rb
 script:
   - export RUBYOPT=-I$(realpath lib)
   - rake
