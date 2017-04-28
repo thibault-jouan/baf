@@ -1,6 +1,6 @@
 Feature: Program usage
 
-  Scenario: prints the usage when unknown option is given
+  Scenario: reports error and prints the usage when unknown option is given
     Given the following baf program:
       """
       Baf::CLI.run(ARGV)
