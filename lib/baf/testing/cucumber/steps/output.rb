@@ -14,6 +14,10 @@ def expect_output content, stream: :output
 end
 
 
+Then /^the output must be empty$/ do
+  expect(last_command_started.output).to be_empty
+end
+
 Then /^the output must contain:$/ do |content|
   expect(last_command_started.output).to include unescape_text content
 end
