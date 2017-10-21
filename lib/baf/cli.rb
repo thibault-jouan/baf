@@ -15,15 +15,20 @@ module Baf
 
     class << self
       def run arguments, stdin: $stdin, stdout: $stdout, stderr: $stderr
-        cli = new build_env(stdin, stdout, stderr), arguments
+        cli = new env = build_env(stdin, stdout, stderr), arguments
         cli.parse_arguments!
         cli.run
       rescue ArgumentError => e
         stderr.puts e
         exit EX_USAGE
       rescue StandardError => e
-        stderr.puts "#{e.class.name}: #{e}"
-        stderr.puts e.backtrace.map { |l| '  %s' % l }
+        if respond_to? :handle_error
+          status = handle_error cli.env, e
+          exit status if status.respond_to? :to_int
+        else
+          stderr.puts "#{e.class.name}: #{e}"
+          stderr.puts e.backtrace.map { |l| '  %s' % l }
+        end
         exit EX_SOFTWARE
       end
 
