@@ -15,7 +15,7 @@ module Baf
 
     class << self
       def run arguments, stdin: $stdin, stdout: $stdout, stderr: $stderr
-        cli = new env_class.new(input: stdin, output: stdout), arguments
+        cli = new build_env(stdin, stdout, stderr), arguments
         cli.parse_arguments!
         cli.run
       rescue ArgumentError => e
@@ -28,6 +28,10 @@ module Baf
       end
 
     private
+
+      def build_env stdin, stdout, stderr
+        env_class.new input: stdin, output: stdout, output_error: stderr
+      end
 
       def env_class
         return Env unless parent_name = name =~ /::[^:]+\Z/ ? $` : nil
