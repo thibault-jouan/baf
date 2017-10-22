@@ -6,7 +6,7 @@ module Baf
 
     let(:stdout)      { StringIO.new }
     let(:stderr)      { StringIO.new }
-    let(:env)         { Env.new output: stdout }
+    let(:env)         { Env.new output: stdout, output_error: stderr }
     let(:arguments)   { %w[foo bar] }
     let(:parser)      { OptionParser.new }
     let(:registrant)  { OptionsRegistrant.new }
@@ -64,6 +64,30 @@ module Baf
         it 'prints the error on error output' do
           trap_exit { run }
           expect(stderr.string).to start_with 'RuntimeError: some error'
+        end
+
+        context 'when the CLI implements a custom error handler' do
+          subject :run do
+            Class.new described_class do
+              class << self
+                def handle_error env, ex
+                  env.puts_error "#{ex.class} (#{ex})"
+                  71
+                end
+              end
+            end.run arguments, stderr: stderr
+          end
+
+          it 'passes the error to the handler' do
+            trap_exit { run }
+            expect(stderr.string).to eq "RuntimeError (some error)\n"
+          end
+
+          it 'exits with the error handler return value as exit status' do
+            expect { run }.to raise_error SystemExit do |e|
+              expect(e.status).to eq 71
+            end
+          end
         end
       end
     end
