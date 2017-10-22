@@ -12,5 +12,13 @@ module Baf
       @output       = output
       @output_error = output_error
     end
+
+    def sync_output
+      output.sync = true
+    end
+
+  private
+
+    attr_reader :output
   end
 end

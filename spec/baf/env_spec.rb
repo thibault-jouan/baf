@@ -40,5 +40,14 @@ module Baf
         expect(output_error.string).to eq 'something' + $/
       end
     end
+
+    describe '#sync_output' do
+      it 'syncs the output' do
+        expect(output)
+          .to receive(:sync=)
+          .with true
+        env.sync_output
+      end
+    end
   end
 end
