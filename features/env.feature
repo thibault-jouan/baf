@@ -11,10 +11,10 @@ Feature: Env class customization
           end
         end
 
-        CLI = Class.new(Baf::CLI)
+        CLI = Class.new Baf::CLI
       end
 
-      TestEnvCustom::CLI.run(ARGV)
+      TestEnvCustom::CLI.run ARGV
       """
     When I run the program
     Then the output must contain exactly "using custom env\n"

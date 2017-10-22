@@ -33,7 +33,7 @@ def wait_until message: 'condition not met after %d seconds'
   timeout = ENV.key?('BAF_TEST_TIMEOUT') ?
     ENV['BAF_TEST_TIMEOUT'].to_i :
     2
-  Timeout.timeout(timeout) do
+  Timeout.timeout timeout do
     loop do
       break if yield
       sleep 0.05
@@ -45,7 +45,7 @@ end
 
 
 Then /^the output will match \/([^\/]+)\/([a-z]*)$/ do |pattern, options|
-  wait_output! build_regexp(pattern, options)
+  wait_output! build_regexp pattern, options
 end
 
 Then /^the output will contain:$/ do |content|

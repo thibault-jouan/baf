@@ -3,7 +3,7 @@ Feature: Built-in verbose option flag declaration
   Scenario: supports built-in verbose option flag
     Given the following baf program:
       """
-      Class.new(Baf::CLI) do
+      Class.new Baf::CLI do
         def setup
           flag_verbose
         end
@@ -11,7 +11,7 @@ Feature: Built-in verbose option flag declaration
         def run
           puts env.verbose?
         end
-      end.run(ARGV)
+      end.run ARGV
       """
     When I successfully run the program with option -v
     Then the output must contain exactly "true\n"
@@ -19,11 +19,11 @@ Feature: Built-in verbose option flag declaration
   Scenario: describes the flag in usage options summary
     Given the following baf program:
       """
-      Class.new(Baf::CLI) do
+      Class.new Baf::CLI do
         def setup
           flag_verbose
         end
-      end.run(ARGV)
+      end.run ARGV
       """
     When I successfully run the program with option -h
     Then the output must match /-v.+--verbose.+enable verbose mode/

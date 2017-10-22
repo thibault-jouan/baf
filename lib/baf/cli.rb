@@ -8,7 +8,7 @@ require 'baf/options_registrant'
 
 module Baf
   class CLI
-    ArgumentError = Class.new(::Baf::ArgumentError)
+    ArgumentError = Class.new ::Baf::ArgumentError
 
     EX_USAGE    = 64
     EX_SOFTWARE = 70
@@ -31,7 +31,7 @@ module Baf
 
       def env_class
         return Env unless parent_name = name =~ /::[^:]+\Z/ ? $` : nil
-        parent = Object.const_get(parent_name)
+        parent = Object.const_get parent_name
         parent.const_defined?(:Env) ? parent.const_get(:Env) : Env
       end
     end

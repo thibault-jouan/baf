@@ -6,7 +6,7 @@ module Baf
 
     let(:stdout)      { StringIO.new }
     let(:stderr)      { StringIO.new }
-    let(:env)         { Env.new(output: stdout) }
+    let(:env)         { Env.new output: stdout }
     let(:arguments)   { %w[foo bar] }
     let(:parser)      { OptionParser.new }
     let(:registrant)  { OptionsRegistrant.new }
@@ -43,7 +43,7 @@ module Baf
         end
 
         it 'exits with a return status of 64' do
-          expect { run }.to raise_error(SystemExit) do |e|
+          expect { run }.to raise_error SystemExit do |e|
             expect(e.status).to eq 64
           end
         end
@@ -70,7 +70,7 @@ module Baf
 
     describe '#initialize' do
       it 'tells the registrant to register with local declarations' do
-        my_cli_class = Class.new(described_class) do
+        my_cli_class = Class.new described_class do
           define_method(:setup) { :options_declaration }
         end
         aggregate_failures do

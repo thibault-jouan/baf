@@ -31,7 +31,7 @@ module Baf
 
     describe '#register' do
       let(:output)  { StringIO.new }
-      let(:env)     { Env.new(output: output) }
+      let(:env)     { Env.new output: output }
       let(:parser)  { OptionParser.new }
 
       it 'sets the assigned usage banner' do

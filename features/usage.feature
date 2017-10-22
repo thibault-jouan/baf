@@ -3,7 +3,7 @@ Feature: Program usage
   Scenario: reports error and prints the usage when unknown option is given
     Given the following baf program:
       """
-      Baf::CLI.run(ARGV)
+      Baf::CLI.run ARGV
       """
     When I run the program with option --unkwnown-option
     Then the exit status must be 64
@@ -18,7 +18,7 @@ Feature: Program usage
   Scenario: prints the usage when -h option is given
     Given the following baf program:
       """
-      Baf::CLI.run(ARGV)
+      Baf::CLI.run ARGV
       """
     When I successfully run the program with option -h
     Then the output must contain exactly:
@@ -32,11 +32,11 @@ Feature: Program usage
   Scenario: reports error and prints the usage when using `usage!'
     Given the following baf program:
       """
-      Class.new(Baf::CLI) do
+      Class.new Baf::CLI do
         def run
           usage!
         end
-      end.run(ARGV)
+      end.run ARGV
       """
     When I run the program
     Then the exit status must be 64
@@ -51,11 +51,11 @@ Feature: Program usage
   Scenario: prevents running the program when -h option is given
     Given the following baf program:
       """
-      Class.new(Baf::CLI) do
+      Class.new Baf::CLI do
         def run
           fail
         end
-      end.run(ARGV)
+      end.run ARGV
       """
     When I run the program with option -h
     Then the exit status must be 0
@@ -63,11 +63,11 @@ Feature: Program usage
   Scenario: separates user-defined options and default options with an empty line
     Given the following baf program:
       """
-      Class.new(Baf::CLI) do
+      Class.new Baf::CLI do
         def setup
           flag_verbose
         end
-      end.run(ARGV)
+      end.run ARGV
       """
     When I successfully run the program with option -h
     Then the output must contain exactly:
@@ -83,11 +83,11 @@ Feature: Program usage
   Scenario: supports setting a custom usage banner
     Given the following baf program:
       """
-      Class.new(Baf::CLI) do
+      Class.new Baf::CLI do
         def setup
           banner 'my_program [options] arguments...'
         end
-      end.run(ARGV)
+      end.run ARGV
       """
     When I successfully run the program with option -h
     Then the output must contain:
