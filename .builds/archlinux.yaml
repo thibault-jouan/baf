@@ -1,0 +1,25 @@
+image: archlinux
+packages:
+  - ruby
+
+sources:
+  - https://git.sr.ht/~tjj/baf
+
+triggers:
+  - action: email
+    condition: failure
+    to: Thibault Jouan <tj+sirhat_baf@a13.fr>
+
+tasks:
+  - setup: |
+      cat <<EOH >> ~/.gemrc
+      gem: --no-user-install
+      EOH
+  - install: |
+      cd baf
+      . .builds/env.sh
+      ./bin/ci/install.sh
+  - test: |
+      cd baf
+      . .builds/env.sh
+      ./bin/ci/test.sh
