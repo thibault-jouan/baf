@@ -40,7 +40,7 @@ def wait_until message: 'condition not met after %d seconds'
     end
   end
 rescue Timeout::Error
-  raise Baf::Testing::WaitError.new(message % timeout, timeout)
+  fail Baf::Testing::WaitError.new(message % timeout, timeout)
 end
 
 

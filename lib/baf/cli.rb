@@ -88,7 +88,7 @@ module Baf
     def parse_arguments!
       parser.parse! arguments
     rescue OptionParser::InvalidOption
-      raise ArgumentError, parser
+      fail ArgumentError, parser
     end
 
     def usage!
