@@ -43,6 +43,8 @@ module Baf
         parent = Object.const_get parent_name
         parent.const_defined?(:Env) ? parent.const_get(:Env) : Env
       end
+
+      def ruby2_keywords *; end unless Module.respond_to? :ruby2_keywords, true
     end
 
     attr_reader :arguments, :env, :parser
@@ -63,6 +65,7 @@ module Baf
       registrant.banner = arg
     end
 
+    ruby2_keywords \
     def flag *args
       registrant.flag *args
     end
@@ -80,8 +83,8 @@ module Baf
         tail: true
     end
 
-    def option *args
-      args = [*args, Proc.new] if block_given?
+    def option *args, &block
+      args = [*args, block] if block_given?
       registrant.option *args
     end
 
