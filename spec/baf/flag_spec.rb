@@ -3,9 +3,9 @@ require 'shared/option'
 
 module Baf
   RSpec.describe Flag do
-    let(:short)     { :f }
-    let(:long)      { :foo }
-    subject(:flag)  { described_class.new short, long }
+    let(:short) { :f }
+    let(:long) { :foo }
+    subject(:flag) { described_class.new short, long }
 
     it_behaves_like 'option'
 

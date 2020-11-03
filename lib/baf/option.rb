@@ -41,20 +41,20 @@ module Baf
 
     def build_attrs short, long, arg_or_desc = nil, desc_or_block = nil, block = nil
       {
-        short:  short,
-        long:   long,
-        desc:   arg_or_desc
+        short: short,
+        long: long,
+        desc: arg_or_desc
       }.merge case desc_or_block
       when Proc
         {
-          desc:   arg_or_desc,
-          block:  desc_or_block
+          desc: arg_or_desc,
+          block: desc_or_block
         }
       when String
         {
-          arg:    arg_or_desc,
-          desc:   desc_or_block,
-          block:  block
+          arg: arg_or_desc,
+          desc: desc_or_block,
+          block: block
         }
       else
         {}

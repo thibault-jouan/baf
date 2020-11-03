@@ -8,8 +8,8 @@ module Baf
     def_delegator :@output_error, :puts, :puts_error
 
     def initialize input: $stdin, output: $stdout, output_error: $stderr
-      @input        = input
-      @output       = output
+      @input = input
+      @output = output
       @output_error = output_error
     end
 

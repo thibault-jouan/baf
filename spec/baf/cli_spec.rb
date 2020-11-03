@@ -4,13 +4,13 @@ module Baf
   RSpec.describe CLI do
     include ExitHelpers
 
-    let(:stdout)      { StringIO.new }
-    let(:stderr)      { StringIO.new }
-    let(:env)         { Env.new output: stdout, output_error: stderr }
-    let(:arguments)   { %w[foo bar] }
-    let(:parser)      { OptionParser.new }
-    let(:registrant)  { OptionsRegistrant.new }
-    subject(:cli)     { described_class.new env, arguments }
+    let(:stdout) { StringIO.new }
+    let(:stderr) { StringIO.new }
+    let(:env) { Env.new output: stdout, output_error: stderr }
+    let(:arguments) { %w[foo bar] }
+    let(:parser) { OptionParser.new }
+    let(:registrant) { OptionsRegistrant.new }
+    subject(:cli) { described_class.new env, arguments }
 
     describe '.run' do
       subject(:run) { described_class.run arguments, stderr: stderr }

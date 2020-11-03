@@ -2,9 +2,9 @@ require 'baf/env'
 
 module Baf
   RSpec.describe Env do
-    let(:input)         { StringIO.new }
-    let(:output)        { StringIO.new }
-    let(:output_error)  { StringIO.new }
+    let(:input) { StringIO.new }
+    let(:output) { StringIO.new }
+    let(:output_error) { StringIO.new }
     subject :env do
       described_class.new \
         input: input,

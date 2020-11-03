@@ -1,4 +1,4 @@
 module Baf
-  Error         = Class.new ::StandardError
+  Error = Class.new ::StandardError
   ArgumentError = Class.new Error
 end

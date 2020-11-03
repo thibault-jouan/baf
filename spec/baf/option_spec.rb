@@ -3,11 +3,11 @@ require 'shared/option'
 
 module Baf
   RSpec.describe Option do
-    let(:short)       { :f }
-    let(:long)        { :foo }
-    let(:arg)         { 'VALUE' }
-    let(:desc)        { 'set foo to VALUE' }
-    subject(:option)  { described_class.new short, long, arg, desc }
+    let(:short) { :f }
+    let(:long) { :foo }
+    let(:arg) { 'VALUE' }
+    let(:desc) { 'set foo to VALUE' }
+    subject(:option) { described_class.new short, long, arg, desc }
 
     include_examples 'option'
 

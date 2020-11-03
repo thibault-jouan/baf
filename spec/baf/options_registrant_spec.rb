@@ -7,8 +7,8 @@ module Baf
   RSpec.describe OptionsRegistrant do
     include ExitHelpers
 
-    let(:options)         { [] }
-    subject(:registrant)  { described_class.new options }
+    let(:options) { [] }
+    subject(:registrant) { described_class.new options }
 
     describe '#flag' do
       it 'adds a new option flag' do
@@ -30,9 +30,9 @@ module Baf
     end
 
     describe '#register' do
-      let(:output)  { StringIO.new }
-      let(:env)     { Env.new output: output }
-      let(:parser)  { OptionParser.new }
+      let(:output) { StringIO.new }
+      let(:env) { Env.new output: output }
+      let(:parser) { OptionParser.new }
 
       it 'sets the assigned usage banner' do
         registrant.banner = 'Usage: my_program arguments...'

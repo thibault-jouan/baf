@@ -10,7 +10,7 @@ module Baf
   class CLI
     ArgumentError = Class.new ::Baf::ArgumentError
 
-    EX_USAGE    = 64
+    EX_USAGE = 64
     EX_SOFTWARE = 70
 
     class << self
@@ -50,9 +50,9 @@ module Baf
     attr_reader :arguments, :env, :parser
 
     def initialize env, arguments, **opts
-      @env        = env
-      @arguments  = arguments
-      @parser     = opts[:parser]     || OptionParser.new
+      @env = env
+      @arguments = arguments
+      @parser = opts[:parser] || OptionParser.new
       @registrant = opts[:registrant] || OptionsRegistrant.new
 
       registrant.register(env, parser) { setup }
