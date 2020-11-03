@@ -52,8 +52,8 @@ module Baf
     def initialize env, arguments, **opts
       @env = env
       @arguments = arguments
-      @parser = opts[:parser] || OptionParser.new
-      @registrant = opts[:registrant] || OptionsRegistrant.new
+      @parser = opts.fetch(:parser) { OptionParser.new }
+      @registrant = opts.fetch(:registrant) { OptionsRegistrant.new }
 
       registrant.register(env, parser) { setup }
     end
