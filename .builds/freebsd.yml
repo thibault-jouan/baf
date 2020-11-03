@@ -1,6 +1,6 @@
-image: archlinux
+image: freebsd/latest
 packages:
-  - ruby
+  - devel/ruby-gems
 
 sources:
   - https://git.sr.ht/~tjj/baf
@@ -11,10 +11,6 @@ triggers:
     to: Thibault Jouan <tj+sirhat_baf@a13.fr>
 
 tasks:
-  - setup: |
-      cat <<EOH >> ~/.gemrc
-      gem: --no-user-install
-      EOH
   - install: |
       cd baf
       . .builds/env.sh

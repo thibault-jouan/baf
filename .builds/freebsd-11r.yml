@@ -1,4 +1,4 @@
-image: freebsd
+image: freebsd/11.x
 packages:
   - devel/ruby-gems
 
