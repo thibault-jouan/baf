@@ -1,50 +1,44 @@
-def program_run check: false, opts: nil, args: nil, wait: true
-  cmd = [*@_baf_program ||= %w[ruby baf]]
-  cmd << opts if opts
-  cmd << args.split(' ') if args
-  if wait
-    run_simple cmd.join(' '), fail_on_error: false
-  else
-    run cmd.join ' '
-  end
-  program_run_check if check
-end
-
-def program_run_check status: 0
-  expect(last_command_started).to have_exit_status status
+def expect_ex process, exit_status
+  expect(process.exit_status).to eq exit_status.to_i
 rescue RSpec::Expectations::ExpectationNotMetError => e
   if ENV.key? 'BAF_TEST_DEBUG'
     fail RSpec::Expectations::ExpectationNotMetError, <<-eoh
 #{e.message} Output was:
-  ```\n#{last_command_started.output.lines.map { |l| "  #{l}" }.join}  ```
+#{?- * 70}
+\n#{process.output.lines.map { |l| "  #{l}" }.join}#{?- * 70}
     eoh
-  else
-    raise
+  else raise
   end
+end
+
+def run state, cmd: nil, wait: true, args: []
+  cmd ||= $_baf[:program]
+  Baf::Testing.run cmd + args, wait: wait, timeout: $_baf[:exec_timeout]
 end
 
 
 When /^I( successfully)? (run|\w+) the program$/ do |check, run|
-  program_run check: !!check, wait: run == 'run'
+  $_baf[:process] = run $_baf, wait: run == 'run'
+  expect_ex $_baf[:process], 0 if check
 end
 
-When /^I( successfully)? (run|\w+) the program with arguments? (.+)$/ do |check, run, args|
-  program_run check: !!check, args: args, wait: run == 'run'
+When(
+  /^I( successfully)? (run|\w+) the program with (?:argument|command|option)s? (.+)$/
+) do |check, run, args|
+  $_baf[:process] = run $_baf, wait: run == 'run', args: args.split(' ')
+  expect_ex $_baf[:process], 0 if check
 end
 
-When /^I( successfully)? (run|\w+) the program with command (.+)$/ do |check, run, cmd|
-  program_run check: !!check, args: cmd, wait: run == 'run'
+When /^I( successfully)? (run|\w+) `([^`]+)`$/ do |check, run, command|
+  $_baf[:process] = run $_baf, cmd: command.split(' '), wait: run == 'run'
+  expect_ex $_baf[:process], 0 if check
 end
 
-When /^I( successfully)? (run|\w+) the program with options? (-.+)$/ do |check, run, opts|
-  program_run check: !!check, opts: opts, wait: run == 'run'
-end
-
-
-Then /^the exit status must be (\d+)$/ do |exit_status|
-  program_run_check status: exit_status.to_i
-end
 
 Then /^the program must terminate successfully$/ do
-  program_run_check status: 0
+  expect_ex $_baf[:process], 0
+end
+
+Then /^the exit status must be (\d+)$/ do |exit_status|
+  expect_ex $_baf[:process], exit_status
 end

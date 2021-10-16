@@ -1,3 +1,3 @@
 When /^I input "([^"]+)"$/ do |content|
-  last_command_started.write unescape_text content
+  $_baf[:process].input Baf::Testing.unescape_step_arg content
 end

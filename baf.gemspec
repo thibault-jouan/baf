@@ -13,6 +13,7 @@ Gem::Specification.new do |s|
 
   s.files       = Dir['lib/**/*']
 
-  s.add_development_dependency 'baf-testing', '~> 0'
   s.add_development_dependency 'rake'
+  s.add_development_dependency 'cucumber', '~> 2.0'
+  s.add_development_dependency 'rspec', '~> 3.11'
 end

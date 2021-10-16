@@ -14,7 +14,7 @@ module Baf
 end
 
 def wait_output! pattern, times: 1, results: nil
-  output = -> { last_command_started.output }
+  output = -> { $_baf[:process].output }
   wait_until do
     case pattern
     when Regexp then (results = output.call.scan(pattern)).size >= times
@@ -45,7 +45,7 @@ end
 
 
 Then /^the output will match \/([^\/]+)\/([a-z]*)$/ do |pattern, options|
-  wait_output! build_regexp pattern, options
+  wait_output! Baf::Testing.build_regexp pattern, options
 end
 
 Then /^the output will contain:$/ do |content|
