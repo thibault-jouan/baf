@@ -108,6 +108,26 @@ RSpec.describe Baf::Testing::Process do
     end
   end
 
+  describe '#running?' do
+    it 'returns false when the process has not been started' do
+      expect(process.running?).to be false
+    end
+
+    it 'returns true when the process is running' do
+      process = described_class.new %w[sleep 1]
+      process.start
+      expect(process.running?).to be true
+    ensure
+      process.stop
+    end
+
+    it 'returns false after the process has exited' do
+      process.start
+      process.wait
+      expect(process.running?).to be false
+    end
+  end
+
   describe '#input' do
     let(:command) { %w[ruby -e puts\ $stdin.gets.chomp.reverse] }
 

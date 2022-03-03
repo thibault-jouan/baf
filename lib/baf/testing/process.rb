@@ -55,6 +55,10 @@ module Baf
       rescue Errno::ECHILD, Errno::ESRCH
       end
 
+      def running?
+        started? && !stopped?
+      end
+
       def input str
         @stdin.write str
       end
@@ -84,6 +88,10 @@ module Baf
             when Regexp then var =~ e
           end
         end
+      end
+
+      def started?
+        !!@pid
       end
 
       def stopped?
