@@ -11,7 +11,7 @@ module Baf
       TMP_FILE_PREFIX = 'baf_test_'.freeze
       WAIT_POLL_DELAY = 0.01
 
-      attr_reader :pid, :exit_status
+      attr_reader :pid, :exit_status, :timeout
 
       def initialize command, env_allow: [], timeout: TIMEOUT
         @command = command

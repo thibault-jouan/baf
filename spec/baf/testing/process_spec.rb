@@ -12,7 +12,7 @@ RSpec.describe Baf::Testing::Process do
   end
   subject(:process) { described_class.new command }
 
-  it { is_expected.to have_attributes pid: nil, exit_status: nil }
+  it { is_expected.to have_attributes pid: nil, exit_status: nil, timeout: 4 }
 
   describe '#start' do
     it 'starts the program and sets its pid' do
