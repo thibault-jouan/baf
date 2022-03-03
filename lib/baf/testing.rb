@@ -39,16 +39,20 @@ module Baf
       end
 
       def run command, wait: true, env_allow: [], timeout: nil
-        timeout ||= Process::TIMEOUT
-        Process.new(command,
+        Process.new(
+          command,
           env_allow: ENV_WHITELIST + env_allow,
-          timeout: timeout
-        ).tap do |exec|
-          exec.start
-          exec.wait do
-            exec.stop
-            fail ExecutionTimeout, EXEC_TIMEOUT_ERROR_FMT % timeout
-          end if wait
+          timeout: timeout || Process::TIMEOUT
+        ).tap do |process|
+          process.start
+          wait process if wait
+        end
+      end
+
+      def wait process
+        process.wait do
+          process.stop
+          fail ExecutionTimeout, EXEC_TIMEOUT_ERROR_FMT % process.timeout
         end
       end
 

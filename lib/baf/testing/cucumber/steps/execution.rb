@@ -12,8 +12,11 @@ rescue RSpec::Expectations::ExpectationNotMetError => e
 end
 
 def run state, cmd: nil, wait: true, args: []
-  cmd ||= $_baf[:program]
-  Baf::Testing.run cmd + args, wait: wait, timeout: $_baf[:exec_timeout]
+  cmd ||= state[:program]
+  Baf::Testing.run cmd + args,
+    wait: wait,
+    env_allow: state.fetch(:env_allow) { [] },
+    timeout: state[:exec_timeout]
 end
 
 
@@ -36,6 +39,7 @@ end
 
 
 Then /^the program must terminate successfully$/ do
+  Baf::Testing.wait $_baf[:process]
   expect_ex $_baf[:process], 0
 end
 
