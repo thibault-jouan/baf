@@ -13,8 +13,9 @@ module Baf
   end
 end
 
-def wait_output! pattern, times: 1, results: nil
-  output = -> { $_baf[:process].output }
+def wait_output!(
+  pattern, output: -> { $_baf[:process].output }, times: 1, results: nil
+)
   wait_until do
     case pattern
     when Regexp then (results = output.call.scan(pattern)).size >= times
