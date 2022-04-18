@@ -15,7 +15,7 @@ RSpec.describe Baf::Testing do
 
     it 'changes the current working directory to the given path' do
       actual_dir = nil
-      described_class.exercise_scenario -> { actual_dir = Dir.pwd }, dir: dir
+      described_class.exercise_scenario(dir: dir) { actual_dir = Dir.pwd }
       expect(actual_dir).to eq File.realpath dir
     end
 
@@ -23,8 +23,7 @@ RSpec.describe Baf::Testing do
       FileUtils.mkdir_p dir
       FileUtils.touch "#{dir}/foo"
       entries = []
-      described_class.exercise_scenario -> { entries = Dir.entries ?. },
-        dir: dir
+      described_class.exercise_scenario(dir:dir) { entries = Dir.entries ?. }
       expect(entries).to eq %w[. ..]
     end
   end

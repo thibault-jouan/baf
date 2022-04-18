@@ -30,11 +30,11 @@ module Baf
         end)
       end
 
-      def exercise_scenario block, dir: WORKING_DIR
+      def exercise_scenario dir: WORKING_DIR
         FileUtils.remove_entry_secure dir, true
         FileUtils.mkdir_p dir
         Dir.chdir dir do
-          block.call
+          yield
         end
       end
 

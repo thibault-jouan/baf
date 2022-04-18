@@ -6,6 +6,6 @@ require 'baf/testing/cucumber/steps/output'
 $_baf = {}
 
 Around do |_, block|
-  Baf::Testing.exercise_scenario block
+  Baf::Testing.exercise_scenario &block
   $_baf.delete :process
 end
