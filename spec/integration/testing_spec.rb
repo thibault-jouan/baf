@@ -106,4 +106,33 @@ RSpec.describe Baf::Testing do
       )
     end
   end
+
+  describe '.wait_output' do
+    let(:stream) { -> { "some output stream\n" } }
+    let(:options) { { stream: stream, timeout: 0.001 } }
+
+    it 'raises an error if timeout is reached before stream includes pattern' do
+      expect { described_class.wait_output 'foo', **options }
+        .to raise_error Baf::Testing::WaitError, <<~eoh
+          expected `foo' not seen after 0.001 seconds in:
+          ----------------------------------------------------------------------
+          some output stream
+          ----------------------------------------------------------------------
+        eoh
+    end
+
+    it 'returns when the stream includes given substring' do
+      described_class.wait_output 'some output', **options
+    end
+
+    it 'returns the matches when the stream includes given pattern' do
+      expect(described_class.wait_output /(some) output/, **options)
+        .to eq [%w[some]]
+    end
+
+    it 'raises an error when given times is less than pattern matches count' do
+      expect { described_class.wait_output /(some)/, times: 2, **options }
+        .to raise_error Baf::Testing::WaitError
+    end
+  end
 end

@@ -36,10 +36,16 @@ module Baf
 
     OUTPUT_SEPARATOR = (?- * 70).freeze
 
+    WAIT_MESSAGE_FMT = 'condition not met after %.03f seconds'.freeze
+    WAIT_OUTPUT_MESSAGE_FMT = <<~eoh.freeze
+      expected `%{pattern}' not seen after %<timeout>.03f seconds in:
+      %{separator}
+      %{output}
+      %{separator}
+    eoh
     WAIT_TIMEOUT = ENV.key?('BAF_TEST_TIMEOUT') ?
       ENV['BAF_TEST_TIMEOUT'].to_i :
       2
-    WAIT_MESSAGE_FMT = 'condition not met after %.03f seconds'.freeze
 
     WORKING_DIR = 'tmp/uat'.freeze
 
@@ -103,6 +109,24 @@ module Baf
           sleep 0.05
         end
         fail WaitError.new message % timeout, timeout
+      end
+
+      def wait_output pattern, stream:, times: 1, timeout: WAIT_TIMEOUT
+        results = nil
+        wait_until timeout: timeout do
+          case pattern
+            when Regexp then (results = stream.call.scan(pattern)).size >= times
+            when String then stream.call.include? pattern
+          end
+        end
+        results
+      rescue Baf::Testing::WaitError => e
+        fail Baf::Testing::WaitError.new(WAIT_OUTPUT_MESSAGE_FMT % {
+          pattern: pattern,
+          timeout: timeout,
+          separator: OUTPUT_SEPARATOR,
+          output: stream.call.chomp
+        }, timeout)
       end
 
       def write_file path, content
