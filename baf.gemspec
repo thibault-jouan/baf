@@ -1,8 +1,6 @@
-require File.expand_path('../lib/baf/version', __FILE__)
-
 Gem::Specification.new do |s|
   s.name        = 'baf'
-  s.version     = Baf::VERSION.dup
+  s.version     = '0.14.1'.freeze
   s.summary     = 'Basic Application Framework'
   s.description = 'Basic Application Framework'
   s.license     = 'BSD-3-Clause'
