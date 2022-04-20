@@ -28,6 +28,26 @@ RSpec.describe Baf::Testing do
     end
   end
 
+  describe '.expect_ex' do
+    let(:process) { double 'process', exit_status: 70, output: "foo\nbar\n" }
+
+    it 'raises an error when given a non matching exit status' do
+      expect { described_class.expect_ex process, 0 }
+        .to raise_error Baf::Testing::ExitStatusMismatch
+    end
+
+    it 'adds the expected and actual exit status to the exception message' do
+      expect { described_class.expect_ex process, 0 }
+        .to raise_error /expected 0.+got 70/
+    end
+
+    it 'adds the process output to the exception message' do
+      expect { described_class.expect_ex process, 0 }.to raise_error do |ex|
+        expect(ex.message).to include process.output
+      end
+    end
+  end
+
   describe '.run' do
     it 'executes the given command and returns a "process"' do
       process = described_class.run %w[sh -c exit\ 70]

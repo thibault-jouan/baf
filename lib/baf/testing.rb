@@ -6,9 +6,9 @@ require 'baf/testing/process'
 module Baf
   module Testing
     ExecutionTimeout = Class.new Error
+    ExitStatusMismatch = Class.new Error
 
     ENV_WHITELIST = [
-      'BAF_TEST_DEBUG',
       /\ACHRUBY_/,
       /\AGEM_/,
       'PATH',
@@ -17,6 +17,15 @@ module Baf
     ].freeze
 
     EXEC_TIMEOUT_ERROR_FMT = 'process did not exit after %.03f seconds'.freeze
+
+    EXIT_STATUS_MISMATCH_FMT = <<~eoh.freeze
+      expected %<expected>d exit status got %<actual>d; output was:
+      %{separator}
+      %{output}
+      %{separator}
+    eoh
+
+    OUTPUT_SEPARATOR = (?- * 70).freeze
 
     WORKING_DIR = 'tmp/uat'.freeze
 
@@ -37,6 +46,17 @@ module Baf
         Dir.chdir dir do
           yield
         end
+      end
+
+      def expect_ex process, exit_status
+        return if process.exit_status == exit_status
+
+        fail ExitStatusMismatch, EXIT_STATUS_MISMATCH_FMT % {
+          expected: exit_status,
+          actual: process.exit_status,
+          separator: OUTPUT_SEPARATOR,
+          output: process.output.chomp
+        }
       end
 
       def run command, wait: true, env_allow: [], timeout: nil
