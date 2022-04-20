@@ -3,6 +3,16 @@ require 'fileutils'
 require 'baf/testing'
 
 RSpec.describe Baf::Testing do
+  describe '.build_regexp' do
+    it 'builds a regexp when given a string' do
+      expect(described_class.build_regexp 'foo').to eq /foo/
+    end
+
+    it 'builds the regexp with given options' do
+      expect(described_class.build_regexp 'foo', 'imx').to eq /foo/imx
+    end
+  end
+
   describe '.exercise_scenario' do
     let(:dir) { 'tmp/integration/test' }
 
