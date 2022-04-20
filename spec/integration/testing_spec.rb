@@ -91,4 +91,19 @@ RSpec.describe Baf::Testing do
       expect(described_class.unescape_step_arg 'foo\nbar\n').to eq "foo\nbar\n"
     end
   end
+
+  describe '.wait_until' do
+    it 'yields the given block' do
+      expect { described_class.wait_until { throw :foo } }.to throw_symbol :foo
+    end
+
+    it 'raises an error if the block keeps returning false until the timeout' do
+      expect do
+        described_class.wait_until(timeout: 0.001) { false }
+      end.to raise_error(
+        Baf::Testing::WaitError,
+        'condition not met after 0.001 seconds'
+      )
+    end
+  end
 end

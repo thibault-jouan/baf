@@ -8,6 +8,15 @@ module Baf
     ExecutionTimeout = Class.new Error
     ExitStatusMismatch = Class.new Error
 
+    class WaitError < Error
+      attr_reader :timeout
+
+      def initialize message, timeout
+        super message
+        @timeout = timeout
+      end
+    end
+
     ENV_WHITELIST = [
       /\ACHRUBY_/,
       /\AGEM_/,
@@ -26,6 +35,11 @@ module Baf
     eoh
 
     OUTPUT_SEPARATOR = (?- * 70).freeze
+
+    WAIT_TIMEOUT = ENV.key?('BAF_TEST_TIMEOUT') ?
+      ENV['BAF_TEST_TIMEOUT'].to_i :
+      2
+    WAIT_MESSAGE_FMT = 'condition not met after %.03f seconds'.freeze
 
     WORKING_DIR = 'tmp/uat'.freeze
 
@@ -79,6 +93,16 @@ module Baf
 
       def unescape_step_arg str
         str.gsub '\n', "\n"
+      end
+
+      def wait_until message: WAIT_MESSAGE_FMT, timeout: WAIT_TIMEOUT
+        return if yield
+        deadline = Time.now + timeout
+        until Time.now >= deadline
+          return if yield
+          sleep 0.05
+        end
+        fail WaitError.new message % timeout, timeout
       end
 
       def write_file path, content
