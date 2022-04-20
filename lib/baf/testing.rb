@@ -11,6 +11,7 @@ module Baf
       'BAF_TEST_DEBUG',
       /\ACHRUBY_/,
       /\AGEM_/,
+      'PATH',
       /\ARB_/,
       'RUBYOPT'
     ].freeze

@@ -26,7 +26,7 @@ RSpec.describe Baf::Testing::Process do
       process.start
       process.wait
       expect(process.output.lines.map { _1.chomp })
-        .not_to include *%w[LANG PATH SHELL USER]
+        .not_to include *%w[LANG SHELL USER]
     end
 
     it 'keeps allowed variable in the environment' do
