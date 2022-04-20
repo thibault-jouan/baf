@@ -1,11 +1,11 @@
 module Baf
   class Option
-    LONG_PREFIX             = '--'.freeze
-    LONG_NORMALIZE_SEARCH   = ?_.freeze
-    LONG_NORMALIZE_REPLACE  = ?-.freeze
-    LONG_WITH_ARG_GLUE      = ' '.freeze
-    PARSER_MESSAGE          = :on
-    PARSER_MESSAGE_TAIL     = :on_tail
+    LONG_PREFIX = '--'.freeze
+    LONG_NORMALIZE_SEARCH = ?_.freeze
+    LONG_NORMALIZE_REPLACE = ?-.freeze
+    LONG_WITH_ARG_GLUE = ' '.freeze
+    PARSER_MESSAGE = :on
+    PARSER_MESSAGE_TAIL = :on_tail
 
     attr_accessor :short, :long, :arg, :desc, :block, :tail
 

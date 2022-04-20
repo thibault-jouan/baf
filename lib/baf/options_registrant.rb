@@ -3,8 +3,8 @@ require 'baf/option'
 
 module Baf
   class OptionsRegistrant
-    SUMMARY_HEADER    = "\noptions:".freeze
-    HELP_PARSER_ARGS  = %w[
+    SUMMARY_HEADER = "\noptions:".freeze
+    HELP_PARSER_ARGS = %w[
       -h
       --help
       print\ this\ message
