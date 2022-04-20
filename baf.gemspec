@@ -1,7 +1,7 @@
 Gem::Specification.new do |s|
-  s.name        = 'baf'
-  s.version     = '0.14.1'.freeze
-  s.summary     = 'Toolkit for testing and writing CLI programs'.freeze
+  s.name = 'baf'
+  s.version = '0.14.1'.freeze
+  s.summary = 'Toolkit for testing and writing CLI programs'.freeze
   s.description = <<~eoh.freeze
     baf helps writing an user acceptance test suite with a dedicated library
     and cucumber steps. It can run and wait for programs in a modified
@@ -63,13 +63,13 @@ Gem::Specification.new do |s|
         arguments ["foo"]
         config path some_file
   eoh
-  s.license     = 'BSD-3-Clause'
-  s.homepage    = 'https://rubygems.org/gems/baf'
+  s.license = 'BSD-3-Clause'
+  s.homepage = 'https://rubygems.org/gems/baf'
 
-  s.authors     = 'Thibault Jouan'
-  s.email       = 'tj@a13.fr'
+  s.authors = 'Thibault Jouan'
+  s.email = 'tj@a13.fr'
 
-  s.files       = Dir['lib/**/*']
+  s.files = Dir['lib/**/*']
 
   s.add_development_dependency 'rake'
   s.add_development_dependency 'cucumber', '~> 3.2'
