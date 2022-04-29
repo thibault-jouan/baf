@@ -31,5 +31,5 @@ Then /^the program must terminate successfully$/ do
 end
 
 Then /^the exit status must be (\d+)$/ do |exit_status|
-  Baf::Testing.expect_ex $_baf[:process], exit_status
+  Baf::Testing.expect_ex $_baf[:process], Integer(exit_status)
 end
