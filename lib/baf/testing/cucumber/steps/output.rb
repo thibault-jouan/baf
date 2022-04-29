@@ -24,6 +24,11 @@ Then /^the( error)? output must contain exactly "([^"]+)"$/ do |stream, content|
     .to eq Baf::Testing::unescape_step_arg content
 end
 
+Then /^the output must match:/ do |pattern|
+  expect($_baf[:process].output)
+    .to match Baf::Testing.build_regexp(pattern, 'mx')
+end
+
 Then /^the output must match \/([^\/]+)\/([a-z]*)$/ do |pattern, options|
   expect($_baf[:process].output)
     .to match Baf::Testing.build_regexp(pattern, options)
