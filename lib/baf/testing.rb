@@ -131,7 +131,7 @@ module Baf
 
       def write_file path, content
         FileUtils.mkdir_p File.dirname path
-        IO.write path, content + $/
+        IO.write path, content
       end
     end
   end
