@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = 'baf'
-  s.version = '0.14.1'.freeze
+  s.version = '0.15.0'.freeze
   s.summary = 'Toolkit for testing and writing CLI programs'.freeze
   s.description = <<~eoh.freeze
     baf helps writing an user acceptance test suite with a dedicated library
