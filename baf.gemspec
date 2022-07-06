@@ -3,6 +3,8 @@ Gem::Specification.new do |s|
   s.version = '0.15.0'.freeze
   s.summary = 'Toolkit for testing and writing CLI programs'.freeze
   s.description = <<~eoh.freeze
+    == Baf
+
     baf helps writing an user acceptance test suite with a dedicated library
     and cucumber steps. It can run and wait for programs in a modified
     environment, verify the exit status, the output streams and other side
