@@ -1,6 +1,6 @@
 Gem::Specification.new do |s|
   s.name = 'baf'
-  s.version = '0.15.0'.freeze
+  s.version = '0.15.1'.freeze
   s.summary = 'Toolkit for testing and writing CLI programs'.freeze
   s.description = <<~eoh.freeze
     == Baf
